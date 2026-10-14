@@ -103,10 +103,46 @@ function branchName(code){code=String(code||'').trim();return (STATE.boot&&STATE
 function branchLabel(code){code=String(code||'').trim();if(!code)return '';const n=branchName(code);return n&&n!==code?code+' '+n:code;}
 
 window.addEventListener('load',init);
-async function init(){localStorage.removeItem('asset_app_token');STATE.token=sessionStorage.getItem('asset_app_token')||'';if(!STATE.token){showLogin();return;}try{await bootApp();}catch(e){clearSession();showLogin('กรุณาเข้าสู่ระบบใหม่');}}
-async function bootApp(){STATE.boot=await callGas('getAppBootstrap');$('brand').firstChild.nodeValue=STATE.boot.appName;const uname=STATE.boot.user.username||STATE.boot.user.name||'';$('userLabel').textContent=isAdmin()?uname+' | ADMIN | ทุกสาขา':uname+' '+branchName(STATE.boot.user.branch);$('navUsers').style.display=STATE.boot.user.permissions.admin?'block':'none';$('navBranches').style.display=STATE.boot.user.permissions.admin?'block':'none';$('navAudit').style.display=isAdmin()?'block':'none';$('navHistory').style.display=isAdmin()?'block':'none';$('btnAddAsset').style.display=STATE.boot.user.permissions.edit?'inline-block':'none';fillFilters();$('dashBranch').style.display=isAdmin()?'block':'none';$('auditDate').value=today();$('auditAuditor').value=STATE.boot.user.username||'';$('loginScreen').classList.add('hidden');$('app').classList.remove('hidden');await loadDashboard();}
+async function captureLaunchParams(){
+  try{
+    if(window.google&&google.script&&google.script.url){
+      await new Promise(resolve=>google.script.url.getLocation(loc=>{
+        const p=(loc&&loc.parameter)||{};
+        const asset=String(p.asset||'').trim();
+        if(asset)sessionStorage.setItem('asset_launch_id',asset);
+        resolve();
+      }));
+    }
+  }catch(_e){}
+}
+async function init(){localStorage.removeItem('asset_app_token');await captureLaunchParams();STATE.token=sessionStorage.getItem('asset_app_token')||'';if(!STATE.token){showLogin();return;}try{await bootApp();}catch(e){clearSession();showLogin('กรุณาเข้าสู่ระบบใหม่');}}
+async function bootApp(){STATE.boot=await callGas('getAppBootstrap');$('brand').firstChild.nodeValue=STATE.boot.appName;const uname=STATE.boot.user.username||STATE.boot.user.name||'';$('userLabel').textContent=isAdmin()?uname+' | ADMIN | ทุกสาขา':uname+' '+branchName(STATE.boot.user.branch);$('navUsers').style.display=STATE.boot.user.permissions.admin?'block':'none';$('navBranches').style.display=STATE.boot.user.permissions.admin?'block':'none';$('navAudit').style.display=isAdmin()?'block':'none';$('navHistory').style.display=isAdmin()?'block':'none';$('btnAddAsset').style.display=STATE.boot.user.permissions.edit?'inline-block':'none';fillFilters();$('dashBranch').style.display=isAdmin()?'block':'none';$('auditDate').value=today();$('auditAuditor').value=STATE.boot.user.username||'';$('loginScreen').classList.add('hidden');$('app').classList.remove('hidden');await loadDashboard();await handlePendingAssetLaunch();}
 async function doLogin(ev){ev&&ev.preventDefault();const username=$('loginUsername').value.trim(),password=$('loginPassword').value,btn=$('loginButton');$('loginMsg').textContent='';btn.disabled=true;btn.textContent='กำลังเข้าสู่ระบบ...';try{const d=await new Promise((resolve,reject)=>google.script.run.withSuccessHandler(resolve).withFailureHandler(e=>reject(new Error(e.message||e))).login(username,password));STATE.token=d.token;sessionStorage.setItem('asset_app_token',STATE.token);$('loginPassword').value='';await bootApp();}catch(e){$('loginMsg').textContent=e.message||'เข้าสู่ระบบไม่สำเร็จ';}finally{btn.disabled=false;btn.textContent='เข้าสู่ระบบ';}}
 async function doLogout(){const token=STATE.token;clearSession();showLogin('ออกจากระบบแล้ว');if(token){try{await new Promise(resolve=>google.script.run.withSuccessHandler(resolve).withFailureHandler(resolve).logout(token));}catch(_e){}}}function clearSession(){STATE.token='';STATE.boot=null;localStorage.removeItem('asset_app_token');sessionStorage.removeItem('asset_app_token');stopScanner();}function showLogin(msg=''){$('loginScreen').classList.remove('hidden');$('app').classList.add('hidden');$('loginMsg').textContent=msg;try{$('loginPassword').value='';}catch(_e){}setTimeout(()=>{try{$('loginUsername').focus();}catch(_e){}},50);}
+async function handlePendingAssetLaunch(){
+  const assetId=String(sessionStorage.getItem('asset_launch_id')||'').trim();
+  if(!assetId)return;
+  sessionStorage.removeItem('asset_launch_id');
+  try{
+    if(isAdmin()){
+      const btn=document.querySelector('[data-page="audit"]');
+      if(btn)showPage('audit',btn);
+      $('auditAssetId').value=assetId;
+      await lookupAuditAsset(true);
+    }else{
+      await showScannedAssetPdf(assetId);
+    }
+  }catch(e){err(e);}
+}
+const ASSET_GITHUB_SCANNER_URL="https://suwanee-skj.github.io/property/";
+function startScanner(){
+  try{
+    window.open(ASSET_GITHUB_SCANNER_URL,'_top');
+  }catch(_e){
+    window.location.href=ASSET_GITHUB_SCANNER_URL;
+  }
+}
+
 function openChangePassword(){$('modalTitle').textContent='เปลี่ยนรหัสผ่าน';$('modalBody').innerHTML=`<div class="formgrid"><div class="field span2"><label>รหัสผ่านปัจจุบัน</label><input id="cpOld" type="password" class="input"></div><div class="field span2"><label>รหัสผ่านใหม่ (อย่างน้อย 8 ตัว)</label><input id="cpNew" type="password" class="input"></div><div class="field span2"><label>ยืนยันรหัสผ่านใหม่</label><input id="cpNew2" type="password" class="input"></div><div class="span2"><button class="btn success" onclick="saveMyPassword()">บันทึก</button></div></div>`;openModal();}async function saveMyPassword(){if($('cpNew').value!==$('cpNew2').value)return toast('ยืนยันรหัสผ่านใหม่ไม่ตรงกัน');try{await callGas('changeMyPassword',[$('cpOld').value,$('cpNew').value]);toast('เปลี่ยนรหัสผ่านเรียบร้อย');closeModal();}catch(e){err(e);}}
 
 function fillSelect(id,items,firstText='ทั้งหมด'){const el=$(id);if(!el)return;el.innerHTML='<option value="ALL">'+esc(firstText)+'</option>'+items.map(v=>'<option value="'+esc(v)+'">'+esc(v)+'</option>').join('');if(STATE.boot&&!isAdmin()&&items.length===1){el.value=items[0];el.disabled=true;}}
