@@ -1,506 +1,136 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
 <head>
-  <base target="_top">
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#bfe7f4">
+  <title>สแกน QR ทรัพย์สิน</title>
   <style>
-    :root{--nav:#a9d8f0;--nav2:#c9eadf;--bg:#f8fbff;--card:#ffffff;--text:#355263;--muted:#7a8e99;--line:#dceaf0;--ok:#67a98f;--warn:#c59b5b;--danger:#c87882;--blue:#83bfe0;--blue2:#e8f5fb;--green:#dff4ea;--pink:#fde8ef;--shadow:0 8px 24px rgba(74,125,150,.10)}
+    :root{--blue:#bfe7f4;--green:#dff4ea;--pink:#fde8ef;--ink:#244b5f;--muted:#6f8792;--line:#d7e7ee;--card:#fff;--primary:#58add3}
     *{box-sizing:border-box}
-    html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
-    body,button,input,select,textarea,table{font-family:"Angsana News","Angsana New","Leelawadee UI","Tahoma",sans-serif;font-size:18px;line-height:1.55;font-kerning:normal;text-rendering:optimizeLegibility}
-    body{margin:0;background:linear-gradient(180deg,#fafdff 0%,#f4fbf8 52%,#fff7fa 100%);color:var(--text);line-height:1.55;letter-spacing:0}.hidden{display:none!important}
-    button,input,select,textarea{min-height:42px}button{touch-action:manipulation}
-    .app{display:grid;grid-template-columns:230px minmax(0,1fr);min-height:100vh}.sidebar{background:linear-gradient(180deg,#a9d8f0 0%,#c9eadf 55%,#f6dbe5 100%);color:#17445e;padding:18px 13px;position:sticky;top:0;height:100vh;box-shadow:4px 0 20px rgba(75,140,175,.10);z-index:6}.brand{font-size:22px;font-weight:700;padding:9px 9px 20px;color:#123f59;line-height:1.25}.brand small{display:block;font-size:17px;font-weight:400;opacity:.86;margin-top:6px;overflow-wrap:anywhere;font-family:Tahoma,Arial,sans-serif;line-height:1.45;letter-spacing:0}.nav button{width:100%;border:0;background:transparent;color:#204e68;text-align:left;padding:12px 13px;border-radius:11px;margin:3px 0;cursor:pointer;font-size:20px;font-weight:700;white-space:nowrap}.nav button:hover,.nav button.active{background:rgba(255,255,255,.86);color:#164a67;box-shadow:0 4px 12px rgba(70,130,165,.10)}
-    .main{padding:18px 20px 32px;min-width:0;overflow:hidden}.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;background:rgba(255,255,255,.78);border:1px solid var(--line);border-radius:14px;padding:13px 15px;box-shadow:var(--shadow)}.title h1,.section-title,.modalhead b{font-size:22px!important;font-weight:700;margin:0}.title p{margin:4px 0 0;color:var(--muted);font-size:18px}.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.btn{border:1px solid var(--line);background:#fff;color:var(--text);border-radius:10px;padding:8px 13px;cursor:pointer;box-shadow:0 2px 8px rgba(70,130,165,.06);font-size:18px}.btn.primary{background:linear-gradient(135deg,#75b8dc,#5fa7cf);border-color:#69add2;color:#fff}.btn.success{background:var(--ok);border-color:var(--ok);color:#fff}.btn.danger{background:var(--danger);border-color:var(--danger);color:#fff}.btn.icon{padding:6px 10px;font-size:20px;line-height:1.2;font-family:"Segoe UI Symbol","Noto Sans Symbols 2","Tahoma",sans-serif}.btn:disabled{opacity:.5;cursor:not-allowed}
-    .filters{display:grid;grid-template-columns:minmax(220px,1.5fr) repeat(3,minmax(145px,.7fr)) auto;gap:9px;margin-bottom:12px;background:rgba(255,255,255,.74);border:1px solid var(--line);border-radius:14px;padding:11px;box-shadow:var(--shadow)}.input,.select,textarea{width:100%;border:1px solid #cfe4f0;border-radius:10px;padding:8px 11px;background:#fff;color:var(--text);font-size:18px;line-height:1.5}input[type="password"]{font-family:Arial,Tahoma,sans-serif!important;font-size:18px!important;line-height:1.5!important;letter-spacing:.12em;-webkit-text-security:disc;color:#233f50!important;caret-color:#233f50}textarea{resize:vertical;min-height:86px}.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-bottom:12px}.card{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--shadow);min-width:0}.kpi{background:linear-gradient(145deg,#ffffff,#f2faff)}.kpi .label{color:var(--muted);font-size:17px}.kpi .value{font-size:27px;font-weight:700;margin-top:4px;color:#397da4}.kpi .sub{font-size:16px;color:var(--muted);margin-top:4px}.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:11px}.section-title{margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;color:#2f6f94}.barrow{display:grid;grid-template-columns:minmax(120px,160px) 1fr 52px;gap:8px;align-items:center;margin:9px 0}.barlabel{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bar{height:10px;background:#edf2f5;border-radius:10px;overflow:hidden}.bar i{display:block;height:100%;background:var(--blue);border-radius:10px}.barval{text-align:right;color:var(--muted)}
-    .tablewrap{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:auto;max-height:calc(100vh - 190px);box-shadow:var(--shadow);-webkit-overflow-scrolling:touch}table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:18px;min-width:max-content}th{position:sticky;top:0;background:#e7f4fb;z-index:1;text-align:left;padding:10px;border-bottom:1px solid var(--line);font-size:18px;font-weight:700;color:#376f8f;line-height:1.45}td{padding:9px 10px;border-bottom:1px solid #edf1f3;vertical-align:middle;line-height:1.45}tr:hover td{background:#fbfdfe}.badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:15px;background:#eaf1f5}.badge.ok{background:#e3f4ea;color:var(--ok)}.badge.warn{background:#fff1d8;color:var(--warn)}.badge.bad{background:#fde8e8;color:var(--danger)}.page{display:none}.page.active{display:block}.empty{padding:30px;text-align:center;color:var(--muted)}.progress{height:9px;background:#e9eff2;border-radius:10px;overflow:hidden;min-width:100px}.progress i{display:block;height:100%;background:var(--ok)}
-    .modal{position:fixed;inset:0;background:rgba(15,35,48,.55);display:none;align-items:center;justify-content:center;padding:18px;z-index:20}.modal.show{display:flex}.modalbox{background:#fff;border-radius:14px;width:min(920px,96vw);max-height:92vh;overflow:auto;-webkit-overflow-scrolling:touch}.modalhead{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}.modalbody{padding:16px}.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.field label{display:block;font-size:17px;color:var(--muted);margin-bottom:5px}.span2{grid-column:1/-1}.detailgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.detailitem{background:#f7fafb;border-radius:8px;padding:10px;overflow-wrap:anywhere}.detailitem b{display:block;font-size:16px;color:var(--muted);margin-bottom:4px}.notice{padding:11px;border-radius:9px;background:#eaf5fb;color:#24546d;margin-bottom:10px}.scanner{border:1px dashed #9fb2bd;border-radius:10px;padding:12px;background:#fbfdfe;margin-bottom:12px}video{width:100%;max-height:300px;background:#111;border-radius:8px;display:none}.html5qr{width:100%;max-width:520px;margin:0 auto;display:none}.toast{position:fixed;right:18px;bottom:18px;background:#153746;color:#fff;padding:11px 14px;border-radius:9px;display:none;z-index:30;font-size:17px}.toast.show{display:block}
-    .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#e8f7ff,#a7daf1)}.login-card{width:min(440px,94vw);background:#fff;border-radius:20px;padding:30px;box-shadow:0 18px 55px rgba(41,73,93,.18);border:1px solid rgba(255,255,255,.75)}.login-logo{width:62px;height:62px;border-radius:17px;background:linear-gradient(135deg,#67afd5,#4c99c0);color:#fff;display:flex;align-items:center;justify-content:center;font-size:36px;line-height:1;font-family:"Segoe UI Symbol","Tahoma",sans-serif;margin-bottom:18px;box-shadow:0 8px 18px rgba(76,153,192,.22)}.login-card h1{font-size:28px!important;font-weight:700;margin:0 0 5px}.login-card p{color:var(--muted);margin:0 0 22px;font-size:18px}.login-card .field{margin-bottom:14px}.login-btn{width:100%;padding:10px;font-size:20px;font-weight:700}.login-msg{min-height:22px;margin-top:10px;color:var(--danger);font-size:17px}.filehint{font-size:16px;color:var(--muted);margin-top:4px}.status-active{color:var(--ok)}.upload-box{border:1px dashed #b8d5df;background:#fbfeff;border-radius:12px;padding:10px}.upload-actions{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0}.upload-status{font-family:Tahoma,Arial,sans-serif;font-size:14px;color:var(--muted);min-height:20px}.upload-preview{display:none;width:100%;max-width:220px;max-height:150px;object-fit:contain;border:1px solid var(--line);border-radius:9px;background:#fff;margin-top:8px}.media-hidden{display:none!important}
-    .branch-scroll{max-height:430px;overflow-y:auto;padding-right:6px;-webkit-overflow-scrolling:touch}.qr-preview{display:flex;flex-direction:column;align-items:center;gap:12px}.qr-preview img{width:min(360px,82vw);height:auto;border:1px solid var(--line);border-radius:14px;background:#fff;padding:12px;box-shadow:var(--shadow)}.qr-btn{font-size:23px;line-height:1;padding:6px 9px}
-
-    /* V3.6 Dashboard pastel palette */
-    #dashboard .kpi:nth-child(3n+1){background:linear-gradient(145deg,#ffffff,#eaf6fd);border-color:#d5eaf6}
-    #dashboard .kpi:nth-child(3n+2){background:linear-gradient(145deg,#ffffff,#e8f7ef);border-color:#d8eee3}
-    #dashboard .kpi:nth-child(3n){background:linear-gradient(145deg,#ffffff,#fdeef3);border-color:#f3dce5}
-    #dashboard .grid2>.card:nth-child(1){background:linear-gradient(180deg,#ffffff,#f1f9fd)}
-    #dashboard .grid2>.card:nth-child(2){background:linear-gradient(180deg,#ffffff,#f1faf5)}
-    #dashboard .card[style*="margin-top"]{background:linear-gradient(180deg,#ffffff,#fff5f8)}
-    #dashboard .bar i{background:linear-gradient(90deg,#86c6e7,#7fc7aa)}
-    @media(max-width:1180px){.app{grid-template-columns:205px minmax(0,1fr)}.sidebar{padding-left:9px;padding-right:9px}.nav button{font-size:18px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.filters{grid-template-columns:repeat(2,minmax(0,1fr))}.filters>*{min-width:0}.filters .btn{width:100%}.grid2{grid-template-columns:1fr}.main{padding:14px}.tablewrap{max-height:calc(100vh - 175px)}}
-    @media(max-width:820px){.app{display:block}.sidebar{height:auto;position:sticky;top:0;padding:8px 10px;background:linear-gradient(90deg,#83c3e5,#aedaf0)}.brand{padding:5px 7px 8px;font-size:20px}.brand small{font-size:16px}.nav{display:flex;gap:5px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}.nav button{flex:0 0 auto;width:auto;min-width:135px;text-align:center;padding:9px 10px;font-size:18px;margin:0}.main{padding:12px}.topbar{align-items:flex-start}.actions{width:auto}.detailgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.modal{padding:10px}.modalbox{width:100%;max-height:95vh}}
-    @media(max-width:600px){body,button,input,select,textarea,table{font-size:17px}.upload-actions .btn{flex:1 1 100%;width:100%}.upload-preview{max-width:100%;max-height:190px}.main{padding:9px}.topbar{align-items:stretch;flex-direction:column;padding:11px}.topbar .actions{width:100%}.topbar .actions .btn{flex:1}.title h1,.section-title,.modalhead b{font-size:21px!important}.title p{font-size:17px}.cards{grid-template-columns:1fr 1fr;gap:8px}.card{padding:11px}.kpi .value{font-size:24px}.filters{grid-template-columns:1fr;gap:7px;padding:9px}.filters>span:empty{display:none}.grid2,.detailgrid,.formgrid{grid-template-columns:1fr}.span2{grid-column:auto}.barrow{grid-template-columns:minmax(95px,135px) 1fr 42px}.tablewrap{max-height:65vh}.modalbody{padding:12px}.login-screen{padding:14px}.login-card{padding:24px 20px;border-radius:17px}.login-logo{width:58px;height:58px;font-size:34px}.login-card h1{font-size:27px!important}.qr-preview img{width:min(300px,86vw)}}
-    @media(max-width:390px){.cards{grid-template-columns:1fr}.nav button{min-width:125px;font-size:17px}.brand{font-size:19px}.main{padding:7px}.btn{padding:8px 10px}.login-card{padding:22px 17px}}
-  
-    #userLabel,.badge,.filehint{font-family:Tahoma,Arial,sans-serif}
-</style>
+    html,body{margin:0;min-height:100%;font-family:Tahoma,Arial,sans-serif;background:linear-gradient(160deg,var(--blue),#f8fcff 45%,var(--green) 75%,var(--pink));color:var(--ink)}
+    body{min-height:100vh;padding:max(18px,env(safe-area-inset-top)) 16px max(22px,env(safe-area-inset-bottom))}
+    .wrap{max-width:620px;margin:0 auto}
+    .card{background:rgba(255,255,255,.96);border:1px solid rgba(255,255,255,.8);border-radius:24px;padding:20px;box-shadow:0 18px 48px rgba(42,104,132,.15)}
+    .head{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+    .icon{width:54px;height:54px;border-radius:16px;background:linear-gradient(135deg,#72c1df,#8ed5bf);display:grid;place-items:center;font-size:30px;color:#fff}
+    h1{font-size:25px;margin:0}.sub{font-size:14px;color:var(--muted);margin-top:3px}
+    #reader{width:100%;min-height:280px;border-radius:18px;overflow:hidden;background:#10252f;margin-top:14px}
+    #reader video{width:100%!important;height:auto!important;min-height:300px;object-fit:cover;background:#10252f}
+    .status{margin:12px 0;padding:12px 14px;border-radius:14px;background:#f4f9fb;color:#4d6975;white-space:pre-wrap;font-size:14px}
+    .status.ok{background:#eaf8ef;color:#24643a}.status.err{background:#fff0f0;color:#a53a3a}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+    button,.btn,input{font:inherit;min-height:48px;border-radius:14px;border:1px solid var(--line)}
+    button,.btn{cursor:pointer;padding:11px 14px;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center}
+    .primary{background:linear-gradient(135deg,#64b8d9,#6dc8b0);color:white;border:0;font-weight:700}
+    .secondary{background:white;color:var(--ink)}
+    .manual{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:14px}
+    .manual input{width:100%;padding:10px 13px;background:white}
+    .hint{margin-top:14px;font-size:13px;line-height:1.6;color:var(--muted)}
+    #photoInput{display:none}
+    @media(max-width:520px){.card{padding:16px;border-radius:20px}.actions{grid-template-columns:1fr}h1{font-size:22px}#reader{min-height:250px}#reader video{min-height:260px}}
+  </style>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js'"></script>
 </head>
 <body>
-<div id="loginScreen" class="login-screen">
-  <div class="login-card">
-    <div class="login-logo" aria-label="เช็กลิสต์">☑</div><h1>ระบบทรัพย์สินสาขา</h1><p>เข้าสู่ระบบด้วยชื่อผู้ใช้ประจำสาขา</p>
-    <form onsubmit="doLogin(event)" autocomplete="off">
-      <div class="field"><label>ชื่อผู้ใช้</label><input id="loginUsername" class="input" autocomplete="off" autocapitalize="none" spellcheck="false" required></div>
-      <div class="field"><label>รหัสผ่าน</label><input id="loginPassword" class="input" type="password" autocomplete="current-password" required></div>
-      <button id="loginButton" class="btn primary login-btn" type="submit">เข้าสู่ระบบ</button><div id="loginMsg" class="login-msg"></div>
-    </form>
-  </div>
-</div>
-
-<div class="app hidden" id="app">
-  <aside class="sidebar"><div class="brand" id="brand">ระบบทรัพย์สินสาขา<small id="userLabel">กำลังโหลด...</small></div><div class="nav">
-    <button class="active" data-page="dashboard">▦ หน้าหลัก</button><button data-page="assets">▤ ทะเบียนทรัพย์สิน</button><button data-page="transfers">⇄ โอนทรัพย์สิน</button><button data-page="audit" id="navAudit">✓ ตรวจนับทรัพย์สิน</button><button data-page="history" id="navHistory">↻ ประวัติ</button><button data-page="reports">▥ รายงานทรัพย์สิน</button><button data-page="users" id="navUsers">⚙ ผู้ใช้งาน</button><button data-page="branches" id="navBranches">🏢 จัดการสาขา</button>
-  </div></aside>
-  <main class="main">
-    <div class="topbar"><div class="title"><h1 id="pageTitle">หน้าหลัก</h1><p id="pageSub">ภาพรวมทรัพย์สิน</p></div><div class="actions"><button class="btn" onclick="refreshCurrent()">↻ Refresh</button><button class="btn danger" onclick="doLogout()">ออกจากระบบ</button></div></div>
-
-    <section id="dashboard" class="page active">
-      <div class="filters"><span></span><select id="dashBranch" class="select"></select><select id="dashType" class="select"></select><span></span><button class="btn primary" onclick="loadDashboard()">แสดงผล</button></div>
-      <div class="cards" id="kpis"></div><div class="grid2"><div class="card"><div class="section-title">ทรัพย์สินสาขา</div><div id="branchBars" class="branch-scroll"></div></div><div class="card"><div class="section-title">สถานะตรวจนับ</div><div id="statusBars"></div></div></div>
-      <div class="card" style="margin-top:10px"><div class="section-title">รายการตรวจล่าสุด</div><div id="recentAudits"></div></div>
-    </section>
-
-    <section id="assets" class="page">
-      <div class="filters"><input id="assetQuery" class="input" placeholder="ค้นหารหัส ชื่อ Serial ผู้ดูแล..."><select id="assetBranch" class="select"></select><select id="assetType" class="select"></select><select id="assetStatus" class="select"><option value="ALL">ทุกสถานะตรวจ</option></select><button class="btn primary" onclick="loadAssets()">ค้นหา</button></div>
-      <div class="actions" style="margin-bottom:10px"><button class="btn success" id="btnAddAsset" onclick="openAssetForm()">+ เพิ่มข้อมูลทรัพย์สิน</button><button class="btn" onclick="exportAssetsCsv()">Export CSV</button><span id="assetCount" style="padding:8px;color:var(--muted)"></span></div>
-      <div class="tablewrap"><table><thead><tr><th>รหัส</th><th>ชื่อทรัพย์สิน</th><th>ประเภท</th><th>สาขา</th><th>วันที่บันทึก</th><th>สถานะทรัพย์สิน</th><th>QR</th><th>ผู้ดูแล</th><th>ราคา/ชิ้น</th><th>รวมราคา</th><th>สถานะตรวจ</th><th></th></tr></thead><tbody id="assetBody"></tbody></table></div>
-    </section>
-
-    <section id="transfers" class="page">
-      <div class="actions" style="margin-bottom:10px"><button class="btn success" onclick="openTransferForm()">+ สร้างรายการโอน</button><span style="color:var(--muted);padding:8px">ทรัพย์สินจะย้ายสาขาเมื่อปลายทางกด “รับเข้าทะเบียน” เท่านั้น</span></div>
-      <div class="filters"><input id="transferQuery" class="input" placeholder="ค้นหาเลขที่โอน / รหัสทรัพย์สิน / สาขา"><select id="transferStatus" class="select"><option value="ALL">ทุกสถานะ</option><option>รอส่ง</option><option>ระหว่างโอน</option><option>รอรับ</option><option>รับเรียบร้อย</option><option>ยกเลิก</option></select><span></span><span></span><button class="btn primary" onclick="loadTransfers()">ค้นหา</button></div>
-      <div class="tablewrap"><table><thead><tr><th>เลขที่โอน</th><th>รหัสทรัพย์สิน</th><th>ทรัพย์สิน</th><th>ต้นทาง</th><th>ปลายทาง</th><th>ผู้โอน</th><th>ผู้รับโอน</th><th>ผู้ดูแลใหม่</th><th>วันที่สร้าง</th><th>สถานะ</th><th>หมายเหตุ</th><th>เครื่องมือ</th></tr></thead><tbody id="transferBody"></tbody></table></div>
-    </section>
-
-    <section id="audit" class="page">
-      <div class="notice">หน้านี้เปิดให้เฉพาะผู้ใช้งานสถานะ <b>ADMIN</b> เท่านั้น</div><div class="grid2">
-        <div class="card"><div class="section-title">สแกน / ค้นหารหัสทรัพย์สิน</div><div class="scanner"><div class="actions"><button class="btn primary" onclick="startScanner()">📷 เปิดกล้องสแกน QR</button><label class="btn" style="cursor:pointer">📸 ถ่ายภาพ QR<input id="qrPhotoInput" type="file" accept="image/*" capture="environment" style="display:none" onchange="scanQrFromPhoto(this.files[0]);this.value=''" ></label><button class="btn" onclick="focusHardwareScanner()">⌁ พร้อมรับจากเครื่องสแกน QR</button></div><div class="filehint">บน iPad/iPhone ปุ่ม “เปิดกล้องสแกน QR” จะเปิดกล้องของเครื่องโดยตรงเพื่อถ่าย QR แล้วอ่านรหัสอัตโนมัติ จึงไม่ใช้ live video ที่อาจเกิดจอดำใน Apps Script ส่วน Android/คอมพิวเตอร์ยังสามารถใช้ live scanner ได้</div></div><div class="field" style="margin-bottom:8px"><label>เลือกสาขาที่ต้องการตรวจ</label><select id="auditSearchBranch" class="select"></select></div><div style="display:flex;gap:7px"><input id="auditAssetId" class="input" placeholder="สแกนหรือกรอกรหัสทรัพย์สิน" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();handleAuditScanInput();}"><button class="btn primary" onclick="handleAuditScanInput()">ค้นหา</button></div><div id="auditAssetInfo" style="margin-top:12px"></div></div>
-        <div class="card"><div class="section-title">บันทึกผลตรวจ</div><div class="formgrid"><div class="field"><label>วันที่ตรวจ</label><input type="date" id="auditDate" class="input"></div><div class="field"><label>ผลการตรวจ</label><select id="auditStatus" class="select"></select></div><div class="field"><label>สาขาที่ตรวจพบ</label><select id="auditFoundBranch" class="select"></select></div><div class="field"><label>ตำแหน่ง / จุดติดตั้ง</label><input id="auditLocation" class="input"></div><div class="field"><label>ผู้ตรวจ</label><input id="auditAuditor" class="input"></div><div class="field"><label>ถ่ายรูปทรัพย์สินล่าสุด</label><input id="auditPhotoFile" type="file" accept="image/png,image/jpeg" capture="environment" class="input"><div class="filehint">รูปที่ถ่ายจะอัปเดตเป็นรูปทรัพย์สินล่าสุดในทะเบียน และใช้กับ PDF ล่าสุด</div></div><div class="field span2"><label>หมายเหตุ</label><textarea id="auditNote"></textarea></div><div class="span2"><button class="btn success" onclick="submitAudit()">บันทึกผลตรวจ</button></div></div></div>
+  <main class="wrap">
+    <section class="card">
+      <div class="head">
+        <div class="icon">✓</div>
+        <div><h1>สแกน QR ทรัพย์สิน</h1><div class="sub">ระบบบริหารทรัพย์สินสาขา</div></div>
       </div>
+
+      <div id="reader"></div>
+      <div id="status" class="status">กด “เปิดกล้องสแกน QR” แล้วอนุญาตการใช้กล้อง</div>
+
+      <div class="actions">
+        <button class="primary" id="startBtn" onclick="startScanner()">📷 เปิดกล้องสแกน QR</button>
+        <button class="secondary" onclick="openPhoto()">🖼 ถ่าย/เลือกรูป QR</button>
+      </div>
+      <input id="photoInput" type="file" accept="image/png,image/jpeg,image/jpg,image/*" capture="environment" onchange="scanPhoto(this.files&&this.files[0])">
+
+      <div class="manual">
+        <input id="manualCode" autocomplete="off" placeholder="กรอกรหัสทรัพย์สิน เช่น ART-MPM01">
+        <button class="secondary" onclick="submitManual()">ค้นหา</button>
+      </div>
+
+      <div class="hint">เมื่อสแกนสำเร็จ ระบบจะกลับไปยัง Web App อัตโนมัติ และเปิดข้อมูล/PDF ของรหัสทรัพย์สินที่สแกน หากเปิดจาก iPad/iPhone แนะนำใช้ Safari และกดอนุญาตกล้องเมื่อระบบถาม</div>
+      <div class="actions"><a class="btn secondary" href="https://script.google.com/macros/s/AKfycbxMeaP27QPlUZgE25Ae3C3xr_xkRXDBKC1NlO7IDoEVkDXt7dxED2LjphOK9jq1017sow/exec">กลับสู่ระบบทรัพย์สิน</a></div>
     </section>
-
-    <section id="history" class="page"><div class="filters"><input id="historyAssetId" class="input" placeholder="รหัสทรัพย์สิน (ว่าง = ทั้งหมด)"><span></span><span></span><span></span><button class="btn primary" onclick="loadHistory()">ค้นหา</button></div><div class="tablewrap"><table><thead><tr><th>วันที่</th><th>รหัสทรัพย์สิน</th><th>เหตุการณ์</th><th>สาขา</th><th>ผู้ดำเนินการ</th><th>รายละเอียด</th><th>หมายเหตุ</th></tr></thead><tbody id="historyBody"></tbody></table></div></section>
-
-    <section id="reports" class="page">
-      <div class="filters"><span></span><select id="reportBranch" class="select"></select><select id="reportType" class="select"></select><span></span><button class="btn primary" onclick="loadReports()">แสดงรายงาน</button></div><div class="cards" id="reportKpis"></div>
-      <div class="card"><div class="section-title">ความคืบหน้าการตรวจนับรายสาขา</div><div class="tablewrap" style="max-height:260px"><table><thead><tr><th>สาขา</th><th>ทั้งหมด</th><th>ตรวจแล้ว</th><th>ปกติ</th><th>มีปัญหา</th><th>ยังไม่ตรวจ</th><th>%</th></tr></thead><tbody id="reportBody"></tbody></table></div></div>
-      <div class="card" style="margin-top:10px"><div class="section-title">จัดการสถานะทรัพย์สิน / พิมพ์รายงาน PDF</div><div class="tablewrap" style="max-height:420px"><table><thead><tr><th>รหัส</th><th>ทรัพย์สิน</th><th>สาขา</th><th>สถานะ</th><th>หมายเหตุ</th><th>อัปเดตล่าสุด</th><th>รายงาน PDF</th><th>เครื่องมือ</th></tr></thead><tbody id="reportAssetBody"></tbody></table></div></div>
-    </section>
-
-    <section id="users" class="page"><div class="actions" style="margin-bottom:10px"><button class="btn success" onclick="openUserForm()">+ เพิ่มผู้ใช้งาน</button><span style="color:var(--muted);padding:8px">ผู้ใช้สาขา: เช่น ART_01 / ART@2026</span></div><div class="tablewrap"><table><thead><tr><th>ชื่อผู้ใช้</th><th>อีเมล</th><th>บทบาท</th><th>สาขา</th><th>ดูข้อมูล</th><th>แก้ทะเบียน</th><th>ตรวจนับ</th><th>รายงาน</th><th>Admin</th><th>ใช้งาน</th><th>เครื่องมือ</th></tr></thead><tbody id="userBody"></tbody></table></div></section>
-    <section id="branches" class="page"><div class="actions" style="margin-bottom:10px"><button class="btn success" onclick="openBranchForm()">+ เพิ่มสาขา</button><span style="color:var(--muted);padding:8px">สาขาที่เพิ่มจากหน้านี้จะพร้อมใช้งานในทะเบียน ตรวจนับ โอนทรัพย์สิน และผู้ใช้งานทันที</span></div><div class="card" style="margin-bottom:10px"><div class="notice">การปิดสาขาจะไม่ลบข้อมูลทรัพย์สินเดิม แต่จะนำสาขาออกจาก Dropdown สำหรับรายการใหม่ และปิดบัญชี USER ของสาขานั้น</div></div><div class="tablewrap"><table><thead><tr><th>รหัสสาขา</th><th>ชื่อสาขา</th><th>สถานะ</th><th>ทรัพย์สิน</th><th>ผู้ใช้งาน</th><th>บัญชีหลัก</th><th>หมายเหตุ</th><th>เครื่องมือ</th></tr></thead><tbody id="branchBody"></tbody></table></div></section>
   </main>
-</div>
-
-<div class="modal" id="modal"><div class="modalbox"><div class="modalhead"><b id="modalTitle">รายละเอียด</b><button class="btn" onclick="closeModal()">✕</button></div><div class="modalbody" id="modalBody"></div></div></div><div class="toast" id="toast"></div>
 
 <script>
-const STATE={boot:null,token:'',currentPage:'dashboard',currentAsset:null,currentQr:null,users:[],branches:[],reportAssets:[],transferRows:[],stream:null,scanTimer:null,html5Scanner:null,pdfPreviewUrl:null,assetMedia:{image:null,receipt:null},assetPreviewUrls:{image:'',receipt:''}};
+const APP_URL="https://script.google.com/macros/s/AKfycbxMeaP27QPlUZgE25Ae3C3xr_xkRXDBKC1NlO7IDoEVkDXt7dxED2LjphOK9jq1017sow/exec";
+let scanner=null,done=false;
 const $=id=>document.getElementById(id);
-function callGas(name,args=[]){return new Promise((resolve,reject)=>{let r=google.script.run.withSuccessHandler(resolve).withFailureHandler(e=>{const msg=e&&e.message?e.message:String(e||'เกิดข้อผิดพลาด');if(msg.includes('SESSION_EXPIRED')){clearSession();showLogin('Session หมดอายุ กรุณาเข้าสู่ระบบใหม่');}reject(new Error(msg));});if(name==='login'||name==='logout')r[name](...args);else r[name](STATE.token,...args);});}
-function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}function money(v){return Number(v||0).toLocaleString('th-TH',{maximumFractionDigits:2});}function pct(v){return Number(v||0).toFixed(1)+'%';}function today(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),3200);}function err(e){console.error(e);toast('เกิดข้อผิดพลาด: '+(e.message||e));}
-function isAdmin(){return STATE.boot&&STATE.boot.user&&String(STATE.boot.user.role).toUpperCase()==='ADMIN';}
-function branchName(code){code=String(code||'').trim();return (STATE.boot&&STATE.boot.branchNames&&STATE.boot.branchNames[code])||code;}
-function branchLabel(code){code=String(code||'').trim();if(!code)return '';const n=branchName(code);return n&&n!==code?code+' '+n:code;}
-
-window.addEventListener('load',init);
-async function init(){localStorage.removeItem('asset_app_token');STATE.token=sessionStorage.getItem('asset_app_token')||'';if(!STATE.token){showLogin();return;}try{await bootApp();}catch(e){clearSession();showLogin('กรุณาเข้าสู่ระบบใหม่');}}
-async function bootApp(){STATE.boot=await callGas('getAppBootstrap');$('brand').firstChild.nodeValue=STATE.boot.appName;const uname=STATE.boot.user.username||STATE.boot.user.name||'';$('userLabel').textContent=isAdmin()?uname+' | ADMIN | ทุกสาขา':uname+' '+branchName(STATE.boot.user.branch);$('navUsers').style.display=STATE.boot.user.permissions.admin?'block':'none';$('navBranches').style.display=STATE.boot.user.permissions.admin?'block':'none';$('navAudit').style.display=isAdmin()?'block':'none';$('navHistory').style.display=isAdmin()?'block':'none';$('btnAddAsset').style.display=STATE.boot.user.permissions.edit?'inline-block':'none';fillFilters();$('dashBranch').style.display=isAdmin()?'block':'none';$('auditDate').value=today();$('auditAuditor').value=STATE.boot.user.username||'';$('loginScreen').classList.add('hidden');$('app').classList.remove('hidden');await loadDashboard();}
-async function doLogin(ev){ev&&ev.preventDefault();const username=$('loginUsername').value.trim(),password=$('loginPassword').value,btn=$('loginButton');$('loginMsg').textContent='';btn.disabled=true;btn.textContent='กำลังเข้าสู่ระบบ...';try{const d=await new Promise((resolve,reject)=>google.script.run.withSuccessHandler(resolve).withFailureHandler(e=>reject(new Error(e.message||e))).login(username,password));STATE.token=d.token;sessionStorage.setItem('asset_app_token',STATE.token);$('loginPassword').value='';await bootApp();}catch(e){$('loginMsg').textContent=e.message||'เข้าสู่ระบบไม่สำเร็จ';}finally{btn.disabled=false;btn.textContent='เข้าสู่ระบบ';}}
-async function doLogout(){const token=STATE.token;clearSession();showLogin('ออกจากระบบแล้ว');if(token){try{await new Promise(resolve=>google.script.run.withSuccessHandler(resolve).withFailureHandler(resolve).logout(token));}catch(_e){}}}function clearSession(){STATE.token='';STATE.boot=null;localStorage.removeItem('asset_app_token');sessionStorage.removeItem('asset_app_token');stopScanner();}function showLogin(msg=''){$('loginScreen').classList.remove('hidden');$('app').classList.add('hidden');$('loginMsg').textContent=msg;try{$('loginPassword').value='';}catch(_e){}setTimeout(()=>{try{$('loginUsername').focus();}catch(_e){}},50);}
-function openChangePassword(){$('modalTitle').textContent='เปลี่ยนรหัสผ่าน';$('modalBody').innerHTML=`<div class="formgrid"><div class="field span2"><label>รหัสผ่านปัจจุบัน</label><input id="cpOld" type="password" class="input"></div><div class="field span2"><label>รหัสผ่านใหม่ (อย่างน้อย 8 ตัว)</label><input id="cpNew" type="password" class="input"></div><div class="field span2"><label>ยืนยันรหัสผ่านใหม่</label><input id="cpNew2" type="password" class="input"></div><div class="span2"><button class="btn success" onclick="saveMyPassword()">บันทึก</button></div></div>`;openModal();}async function saveMyPassword(){if($('cpNew').value!==$('cpNew2').value)return toast('ยืนยันรหัสผ่านใหม่ไม่ตรงกัน');try{await callGas('changeMyPassword',[$('cpOld').value,$('cpNew').value]);toast('เปลี่ยนรหัสผ่านเรียบร้อย');closeModal();}catch(e){err(e);}}
-
-function fillSelect(id,items,firstText='ทั้งหมด'){const el=$(id);if(!el)return;el.innerHTML='<option value="ALL">'+esc(firstText)+'</option>'+items.map(v=>'<option value="'+esc(v)+'">'+esc(v)+'</option>').join('');if(STATE.boot&&!isAdmin()&&items.length===1){el.value=items[0];el.disabled=true;}}
-function fillBranchSelect(id,firstText='ทุกสาขา'){const el=$(id);if(!el)return;const opts=(STATE.boot.branchOptions&&STATE.boot.branchOptions.length?STATE.boot.branchOptions:(STATE.boot.branches||[]).map(code=>({code:code,label:branchLabel(code)})));el.innerHTML='<option value="ALL">'+esc(firstText)+'</option>'+opts.map(o=>'<option value="'+esc(o.code)+'">'+esc(o.label||branchLabel(o.code))+'</option>').join('');if(!isAdmin()&&opts.length===1){el.value=opts[0].code;el.disabled=true;}else{el.disabled=false;}}
-function fillFilters(){const t=STATE.boot.assetTypes||[];['dashBranch','assetBranch','reportBranch','auditFoundBranch','auditSearchBranch'].forEach(id=>fillBranchSelect(id,(id==='auditFoundBranch'||id==='auditSearchBranch')?'เลือกสาขา':'ทุกสาขา'));['dashType','assetType','reportType'].forEach(id=>fillSelect(id,t,'ทุกประเภท'));$('auditStatus').innerHTML=(STATE.boot.auditStatuses||[]).map(v=>'<option>'+esc(v)+'</option>').join('');$('assetStatus').innerHTML='<option value="ALL">ทุกสถานะตรวจ</option>'+(STATE.boot.auditStatuses||[]).map(v=>'<option>'+esc(v)+'</option>').join('')+'<option>ยังไม่ตรวจ</option>';if(!isAdmin()){$('dashBranch').value=STATE.boot.user.branch;$('dashBranch').disabled=true;}}
-
-document.querySelectorAll('.nav button').forEach(btn=>btn.addEventListener('click',()=>showPage(btn.dataset.page,btn)));function showPage(page,btn){if(page==='audit'&&!isAdmin())return toast('ตรวจนับทรัพย์สินเปิดให้เฉพาะ ADMIN');if(page==='history'&&!isAdmin())return toast('ประวัติการเปลี่ยนแปลงเปิดให้เฉพาะ ADMIN');if((page==='users'||page==='branches')&&!isAdmin())return toast('เมนูนี้เปิดให้เฉพาะ ADMIN');document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));$(page).classList.add('active');btn.classList.add('active');STATE.currentPage=page;const meta={dashboard:['หน้าหลัก','ภาพรวมทรัพย์สิน'],assets:['ทะเบียนทรัพย์สิน','ค้นหา เพิ่ม และแก้ไขข้อมูลทรัพย์สิน'],transfers:['โอนทรัพย์สิน','ส่งและรับโอนทรัพย์สินระหว่างสาขา'],audit:['ตรวจนับทรัพย์สิน','เฉพาะ ADMIN'],history:['ประวัติทรัพย์สิน','ประวัติการเปลี่ยนแปลง'],reports:['รายงานทรัพย์สิน','รายงานและจัดการสถานะทรัพย์สิน'],users:['ผู้ใช้งาน','กำหนดสิทธิ์และสถานะผู้ใช้งาน'],branches:['จัดการสาขา','เพิ่ม แก้ไข เปิดหรือปิดสาขาจากหน้า Web App']};$('pageTitle').textContent=meta[page][0];$('pageSub').textContent=meta[page][1];if(page==='assets')loadAssets();if(page==='transfers')loadTransfers();if(page==='history')loadHistory();if(page==='reports')loadReports();if(page==='users')loadUsers();if(page==='branches')loadBranches();}function refreshCurrent(){({dashboard:loadDashboard,assets:loadAssets,transfers:loadTransfers,history:loadHistory,reports:loadReports,users:loadUsers,branches:loadBranches,audit:()=>{}}[STATE.currentPage]||(()=>{}))();}
-
-async function loadDashboard(){try{const d=await callGas('getDashboard',[{branch:$('dashBranch').value,assetType:$('dashType').value}]);renderKpis($('kpis'),d.kpis);renderBars('branchBars',d.byBranch);renderBars('statusBars',d.byStatus,10);$('recentAudits').innerHTML=d.recentAudits.length?'<table><thead><tr><th>วันที่</th><th>รหัส</th><th>ผลตรวจ</th><th>สาขา</th><th>ผู้ตรวจ</th></tr></thead><tbody>'+d.recentAudits.map(x=>`<tr><td>${esc(x.auditDate)}</td><td>${esc(x.assetId)}</td><td>${statusBadge(x.status)}</td><td>${esc(x.branch)}</td><td>${esc(x.auditor)}</td></tr>`).join('')+'</tbody></table>':'<div class="empty">ยังไม่มีผลตรวจนับ</div>';}catch(e){err(e);}}function renderKpis(el,k){el.innerHTML=[['รายการทรัพย์สิน',k.assetRecords,'ทะเบียน'],['จำนวนรวม',money(k.quantity),'หน่วย'],['มูลค่ารวม',money(k.totalValue),'บาท'],['สาขา',k.branches,'สาขา'],['ตรวจแล้ว',k.audited,pct(k.auditPercent)],['ยังไม่ตรวจ',k.notAudited,'รายการ'],['มีปัญหา',k.issues,'รายการ'],['ความคืบหน้า',pct(k.auditPercent),'ตรวจนับ']].map(x=>`<div class="card kpi"><div class="label">${x[0]}</div><div class="value">${x[1]}</div><div class="sub">${x[2]}</div></div>`).join('');}function renderBars(id,arr,maxRows){const list=maxRows?(arr||[]).slice(0,maxRows):(arr||[]),max=Math.max(...list.map(x=>x.value),1);$(id).innerHTML=list.length?list.map(x=>`<div class="barrow"><div class="barlabel">${esc(x.label)}</div><div class="bar"><i style="width:${x.value/max*100}%"></i></div><div class="barval">${x.value}</div></div>`).join(''):'<div class="empty">ไม่มีข้อมูล</div>';}
-
-async function loadAssets(){try{const d=await callGas('searchAssets',[{query:$('assetQuery').value,branch:$('assetBranch').value,assetType:$('assetType').value,limit:500}]);if(!d||!Array.isArray(d.rows))throw new Error('ไม่ได้รับข้อมูลทะเบียนทรัพย์สินจากเซิร์ฟเวอร์ กรุณาอัปเดต Code.gs เป็น v2.1 และ Deploy เวอร์ชันใหม่');let rows=d.rows;if($('assetStatus').value!=='ALL')rows=rows.filter(x=>x.auditStatus===$('assetStatus').value);STATE.lastAssetRows=rows;$('assetCount').textContent='พบ '+rows.length.toLocaleString('th-TH')+' จาก '+Number(d.total||0).toLocaleString('th-TH')+' รายการ';$('assetBody').innerHTML=rows.map(x=>`<tr><td><b>${esc(x.assetId)}</b></td><td>${esc(x.assetName)}</td><td>${esc(x.assetType)}</td><td>${esc(branchLabel(x.branch))}</td><td>${esc(x.recordDate)}</td><td>${assetStatusBadge(x.assetStatus)}</td><td><button class="btn icon qr-btn" title="ดู QR" onclick="showQrPopup('${esc(x.assetId)}')">▦</button></td><td>${esc(x.custodian)}</td><td style="text-align:right">${money(x.price)}</td><td style="text-align:right">${money((Number(x.price)||0)*(Number(x.quantity)||1))}</td><td>${statusBadge(x.auditStatus)}</td><td><button class="btn" onclick="viewAsset('${esc(x.assetId)}')">ดู</button></td></tr>`).join('')||'<tr><td colspan="12" class="empty">ไม่พบข้อมูล</td></tr>';}catch(e){err(e);}}
-function statusBadge(s){const c=s==='พบและปกติ'?'ok':s==='ยังไม่ตรวจ'?'':'bad';return `<span class="badge ${c}">${esc(s||'-')}</span>`;}function assetStatusBadge(s){const c=s==='ใช้งาน'?'ok':s==='ส่งให้สาขา'||s==='รับจากสาขา'?'warn':'bad';return `<span class="badge ${c}">${esc(s||'ใช้งาน')}</span>`;}
-async function viewAsset(id){try{const d=await callGas('getAssetDetail',[id]);STATE.currentAsset=d.asset;const a=d.asset,link=(u,t)=>u?`<a href="${esc(u)}" target="_blank">${t}</a>`:'-';$('modalTitle').textContent='รายละเอียดทรัพย์สิน '+a.assetId;$('modalBody').innerHTML=`<div class="detailgrid">${[['รหัสทรัพย์สิน',a.assetId],['ชื่อทรัพย์สิน',a.assetName],['Serial No.',a.serialNo],['ประเภท',a.assetType],['สาขา',branchLabel(a.branch)],['แหล่งที่มา',a.source||'ไม่ระบุ'],['วันที่บันทึก',a.recordDate],['วันที่จัดซื้อ',a.purchaseDate],['ราคา (ต่อชิ้น)',money(a.price)+' บาท'],['จำนวน',a.quantity],['รวมราคา',money((Number(a.price)||0)*(Number(a.quantity)||1))+' บาท'],['ยี่ห้อ',a.brand],['รุ่น/สี',a.model],['ผู้ดูแล',a.custodian],['สถานะทรัพย์สิน',a.assetStatus],['หมายเหตุสถานะ',a.statusNote],['อัปเดตสถานะ',a.statusUpdated]].map(x=>`<div class="detailitem"><b>${x[0]}</b>${esc(x[1]||'-')}</div>`).join('')}</div><div class="actions" style="margin-top:12px">${link(a.image,'รูปทรัพย์สิน')} <button class="btn icon qr-btn" title="ดู QR" onclick="showQrPopup('${esc(a.assetId)}')">▦</button> ${link(a.receipt,'ใบเสร็จ')} ${a.pdf?`<button class="btn icon primary" title="พิมพ์รายงาน PDF" onclick="printAssetPdf('${esc(a.assetId)}')">🖨</button>`:'<span class="badge">ยังไม่มี PDF</span>'} ${STATE.boot.user.permissions.edit?'<button class="btn primary" onclick="openAssetForm(STATE.currentAsset)">แก้ไขทะเบียน</button>':''} ${isAdmin()?`<button class="btn success" onclick="goAuditFromAsset('${esc(a.assetId)}')">ตรวจนับ</button>`:''}</div>${isAdmin()?`<div class="section-title" style="margin-top:18px">ประวัติล่าสุด</div>${d.history.length?d.history.slice(0,8).map(h=>`<div class="detailitem" style="margin:5px 0"><b>${esc(h.date)} | ${esc(h.type)}</b>${esc(h.newValue||h.note||'')}</div>`).join(''):'<div class="empty">ยังไม่มีประวัติ</div>'}`:''}`;openModal();}catch(e){err(e);}}function goAuditFromAsset(id){if(!isAdmin())return;closeModal();document.querySelector('[data-page="audit"]').click();$('auditAssetId').value=id;lookupAuditAsset();}
-
-function toInputDate(v){if(!v)return '';const m=String(v).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);return m?`${m[3]}-${m[2]}-${m[1]}`:String(v).slice(0,10);}
-function resetAssetMediaState(){
-  ['image','receipt'].forEach(k=>{const u=STATE.assetPreviewUrls&&STATE.assetPreviewUrls[k];if(u){try{URL.revokeObjectURL(u);}catch(_e){}}});
-  STATE.assetMedia={image:null,receipt:null};STATE.assetPreviewUrls={image:'',receipt:''};
-}
-function openAssetForm(a){
-  a=a||{};resetAssetMediaState();
-  const creating=!a.assetId,branches=STATE.boot.branches||[],branchOptions=branches.map(v=>`<option value="${esc(v)}" ${v===a.branch?'selected':''}>${esc(branchLabel(v))}</option>`).join('');
-  $('modalTitle').textContent=creating?'เพิ่มข้อมูลทรัพย์สิน':'แก้ไขทะเบียนทรัพย์สิน';
-  $('modalBody').innerHTML=`<div class="notice">รหัสทรัพย์สินจะสร้างอัตโนมัติจากรหัสสาขา เช่น <b>ART-MPM01</b></div><div class="formgrid"><div class="field"><label>รหัสทรัพย์สิน</label><input id="fAssetId" class="input" value="${esc(a.assetId||'สร้างอัตโนมัติเมื่อบันทึก')}" readonly></div><div class="field"><label>วันที่บันทึกทรัพย์สิน *</label><input id="fRecordDate" type="date" class="input" value="${esc(toInputDate(a.recordDate)||today())}"></div><div class="field"><label>ชื่อทรัพย์สิน *</label><input id="fAssetName" class="input" value="${esc(a.assetName||'')}"></div><div class="field"><label>Serial No.</label><input id="fSerial" class="input" value="${esc(a.serialNo||'')}"></div><div class="field"><label>ประเภททรัพย์สิน</label><select id="fType" class="select"><option value="ทรัพย์สินเช่า" ${String(a.assetType||'').indexOf('เช่า')>=0?'selected':''}>ทรัพย์เช่า (เป็นการเช่าจากภายนอก)</option><option value="ทรัพย์สินถาวร" ${String(a.assetType||'').indexOf('ถาวร')>=0||!a.assetType?'selected':''}>ทรัพย์สินถาวร (เป็นการจัดซื้อของบริษัท)</option></select></div><div class="field"><label>สาขา *</label><select id="fBranch" class="select" ${!isAdmin()?'disabled':''}>${branchOptions}</select></div><div class="field"><label>แหล่งที่มา</label><select id="fSource" class="select"><option value="ไม่ระบุ" ${(a.source||'ไม่ระบุ')==='ไม่ระบุ'?'selected':''}>ไม่ระบุ</option><option value="สั่งซื้อ" ${a.source==='สั่งซื้อ'?'selected':''}>สั่งซื้อ</option><option value="รับจากสาขา" ${a.source==='รับจากสาขา'?'selected':''}>รับจากสาขา</option></select></div><div class="field"><label>วันที่จัดซื้อ</label><input id="fPurchaseDate" type="date" class="input" value="${esc(toInputDate(a.purchaseDate))}"></div><div class="field"><label>ราคา (ต่อชิ้น)</label><input id="fPrice" type="number" min="0" step="0.01" class="input" value="${esc(a.price||0)}" oninput="updateAssetTotal()"></div><div class="field"><label>จำนวนทรัพย์สิน</label><input id="fQty" type="number" min="1" step="1" class="input" value="${esc(a.quantity||1)}" oninput="updateAssetTotal()"></div><div class="field span2"><label>รวมราคา</label><input id="fTotalPrice" class="input" value="${money((Number(a.price)||0)*(Number(a.quantity)||1))} บาท" readonly></div><div class="field"><label>ยี่ห้อ</label><input id="fBrand" class="input" value="${esc(a.brand||'')}"></div><div class="field"><label>รุ่น/สี</label><input id="fModel" class="input" value="${esc(a.model||'')}"></div><div class="field"><label>ผู้ดูแลทรัพย์สิน</label><input id="fCustodian" class="input" value="${esc(a.custodian||'')}"></div>
-  <div class="field"><label>รูปทรัพย์สิน</label><div class="upload-box"><div class="filehint">เลือกได้ 2 วิธี และระบบจะใช้ไฟล์ที่เลือกล่าสุด</div><div class="upload-actions"><button type="button" class="btn primary" onclick="pickAssetMedia('image','camera')">📷 ถ่ายภาพ</button><button type="button" class="btn" onclick="pickAssetMedia('image','file')">🖼 เลือกไฟล์ PNG/JPG</button></div><input id="fImageCamera" class="media-hidden" type="file" accept="image/*" capture="environment" onchange="handleAssetMediaSelection('image','camera',this)"><input id="fImageFile" class="media-hidden" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" onchange="handleAssetMediaSelection('image','file',this)"><div id="fImageStatus" class="upload-status">${a.image?'มีรูปเดิมแล้ว — เลือกใหม่เมื่อต้องการอัปเดต':'ยังไม่ได้เลือกรูป'}</div><img id="fImagePreview" class="upload-preview" alt="ตัวอย่างรูปทรัพย์สิน">${a.image?`<div class="filehint"><a href="${esc(a.image)}" target="_blank">ดูรูปเดิม</a></div>`:''}</div></div>
-  <div class="field"><label>ใบเสร็จ</label><div class="upload-box"><div class="filehint">ถ่ายภาพ หรือเลือกไฟล์ PNG/JPG จากเครื่อง</div><div class="upload-actions"><button type="button" class="btn primary" onclick="pickAssetMedia('receipt','camera')">📷 ถ่ายภาพ</button><button type="button" class="btn" onclick="pickAssetMedia('receipt','file')">🖼 เลือกไฟล์ PNG/JPG</button></div><input id="fReceiptCamera" class="media-hidden" type="file" accept="image/*" capture="environment" onchange="handleAssetMediaSelection('receipt','camera',this)"><input id="fReceiptFile" class="media-hidden" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" onchange="handleAssetMediaSelection('receipt','file',this)"><div id="fReceiptStatus" class="upload-status">${a.receipt?'มีใบเสร็จเดิมแล้ว — เลือกใหม่เมื่อต้องการอัปเดต':'ยังไม่ได้เลือกใบเสร็จ'}</div><img id="fReceiptPreview" class="upload-preview" alt="ตัวอย่างใบเสร็จ">${a.receipt?`<div class="filehint"><a href="${esc(a.receipt)}" target="_blank">ดูใบเสร็จเดิม</a></div>`:''}</div></div>
-  <div class="field span2"><label>QR และ PDF</label><div class="notice">ระบบบันทึกทะเบียนก่อน แล้วสร้าง QR และ PDF ต่อให้อัตโนมัติ เพื่อให้หน้าจอไม่ค้างรอนาน</div></div><div class="span2"><button id="saveAssetBtn" class="btn success" onclick="saveAssetForm('${creating?'create':'update'}')">บันทึกทะเบียนทรัพย์สิน</button></div></div>`;
-  openModal();
-}
-function updateAssetTotal(){const p=Number(($('fPrice')&&$('fPrice').value)||0),q=Number(($('fQty')&&$('fQty').value)||0);if($('fTotalPrice'))$('fTotalPrice').value=money(p*q)+' บาท';}
-function pickAssetMedia(kind,source){const id=kind==='image'?(source==='camera'?'fImageCamera':'fImageFile'):(source==='camera'?'fReceiptCamera':'fReceiptFile');const el=$(id);if(!el)return;el.value='';el.click();}
-function isPngJpgFile(file){const name=String(file&&file.name||'').toLowerCase();return /^image\/(png|jpeg)$/i.test(String(file&&file.type||'')) || /\.(png|jpe?g)$/i.test(name);}
-function handleAssetMediaSelection(kind,source,input){
-  const file=input&&input.files&&input.files[0];if(!file)return;
+function setStatus(text,type=''){const e=$('status');e.textContent=text;e.className='status '+type;}
+function normalizeCode(value){
+  let s=String(value||'').trim();
+  if(!s)return '';
   try{
-    if(!String(file.type||'').startsWith('image/')&&!/\.(png|jpe?g|heic|heif)$/i.test(String(file.name||'')))throw new Error('ไฟล์ที่เลือกไม่ใช่รูปภาพ');
-    if(source==='file'&&!isPngJpgFile(file))throw new Error('การเลือกไฟล์รองรับเฉพาะ PNG หรือ JPG');
-    if(file.size>12*1024*1024)throw new Error('ไฟล์รูปต้องไม่เกิน 12 MB');
-    const otherId=kind==='image'?(source==='camera'?'fImageFile':'fImageCamera'):(source==='camera'?'fReceiptFile':'fReceiptCamera');const other=$(otherId);if(other)other.value='';
-    STATE.assetMedia[kind]=file;
-    const status=$(kind==='image'?'fImageStatus':'fReceiptStatus');if(status)status.textContent=(source==='camera'?'ถ่ายภาพแล้ว: ':'เลือกไฟล์แล้ว: ')+(file.name||'รูปภาพ')+' ('+Math.max(1,Math.round(file.size/1024)).toLocaleString('th-TH')+' KB)';
-    const prev=$(kind==='image'?'fImagePreview':'fReceiptPreview');
-    if(prev){const old=STATE.assetPreviewUrls[kind];if(old){try{URL.revokeObjectURL(old);}catch(_e){}}const url=URL.createObjectURL(file);STATE.assetPreviewUrls[kind]=url;prev.src=url;prev.style.display='block';}
-  }catch(e){input.value='';STATE.assetMedia[kind]=null;err(e);}
-}
-async function imageFileToJpegData(file,maxSize=1280,quality=.80){
-  if(!file)return '';
-  if(file.size>12*1024*1024)throw new Error('ไฟล์รูปต้องไม่เกิน 12 MB');
-  let source=null,dispose=()=>{};
-  try{
-    if(window.createImageBitmap){
-      try{source=await createImageBitmap(file,{imageOrientation:'from-image'});}catch(_e){source=await createImageBitmap(file);}
-      dispose=()=>{try{source.close&&source.close();}catch(_e){}};
+    if(/^https?:\/\//i.test(s)){
+      const u=new URL(s);
+      s=u.searchParams.get('asset')||u.searchParams.get('id')||u.searchParams.get('code')||s;
     }
   }catch(_e){}
-  if(!source){
-    const data=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=()=>rej(new Error('อ่านไฟล์รูปไม่สำเร็จ'));r.readAsDataURL(file);});
-    source=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>rej(new Error('เปิดรูปไม่สำเร็จ กรุณาใช้ JPG/PNG หรือถ่ายภาพใหม่'));i.src=data;});
-  }
-  const w=source.width||source.naturalWidth||1,h=source.height||source.naturalHeight||1,scale=Math.min(1,maxSize/Math.max(w,h)),c=document.createElement('canvas');
-  c.width=Math.max(1,Math.round(w*scale));c.height=Math.max(1,Math.round(h*scale));
-  const ctx=c.getContext('2d',{alpha:false});ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(source,0,0,c.width,c.height);dispose();
-  return c.toDataURL('image/jpeg',quality);
+  return s.trim();
 }
-async function saveAssetForm(mode){
-  const btn=$('saveAssetBtn');
+async function finish(value){
+  if(done)return;
+  const code=normalizeCode(value);
+  if(!code)return setStatus('ไม่พบรหัสทรัพย์สินจาก QR','err');
+  done=true;
+  setStatus('สแกนสำเร็จ: '+code+'\nกำลังกลับเข้าสู่ระบบ...','ok');
+  try{if(scanner)await scanner.stop();}catch(_e){}
+  const url=APP_URL+(APP_URL.includes('?')?'&':'?')+'asset='+encodeURIComponent(code)+'&source=github-scanner';
+  setTimeout(()=>location.replace(url),250);
+}
+async function startScanner(){
+  done=false;
+  $('startBtn').disabled=true;
+  setStatus('กำลังขอสิทธิ์กล้อง...');
   try{
-    btn.disabled=true;btn.textContent='กำลังเตรียมรูป...';
-    const [imageData,receiptData]=await Promise.all([imageFileToJpegData(STATE.assetMedia.image,1280,.80),imageFileToJpegData(STATE.assetMedia.receipt,1500,.82)]);
-    btn.textContent='กำลังบันทึกทะเบียน...';
-    const p={mode,assetId:mode==='update'?STATE.currentAsset.assetId:'',assetName:$('fAssetName').value,serialNo:$('fSerial').value,assetType:$('fType').value,branch:$('fBranch').value,source:$('fSource').value,recordDate:$('fRecordDate').value,purchaseDate:$('fPurchaseDate').value,price:$('fPrice').value,quantity:$('fQty').value,brand:$('fBrand').value,model:$('fModel').value,custodian:$('fCustodian').value,imageData,receiptData};
-    const d=await callGas('saveAsset',[p]);
-    resetAssetMediaState();closeModal();toast('บันทึก '+d.assetId+' แล้ว — ระบบกำลังสร้าง QR และ PDF ต่อให้อัตโนมัติ');
-    // v4.2: ไม่บล็อกหน้าจอรอ QR/PDF; โหลดทะเบียนและสร้างสื่อพร้อมกัน
-    const finalizePromise=callGas('finalizeAssetMedia',[d.assetId]);
-    loadAssets().catch(err);
-    finalizePromise.then(()=>toast('สร้าง QR และ PDF ของ '+d.assetId+' เรียบร้อย')).catch(e=>toast('บันทึกทะเบียนแล้ว แต่สร้าง QR/PDF ไม่สำเร็จ: '+e.message));
-  }catch(e){err(e);}finally{if(btn){btn.disabled=false;btn.textContent='บันทึกทะเบียนทรัพย์สิน';}}
-}
-
-async function loadTransfers(){try{STATE.transferRows=await callGas('getTransfers',[{query:$('transferQuery').value,status:$('transferStatus').value}]);$('transferBody').innerHTML=STATE.transferRows.map((t,i)=>`<tr><td><b>${esc(t.transferId)}</b></td><td>${esc(t.assetId)}</td><td>${esc(t.assetName)}</td><td>${esc(branchLabel(t.fromBranch))}</td><td>${esc(branchLabel(t.toBranch))}</td><td>${esc(t.transferorName||'-')}</td><td>${esc(t.receiverName||'-')}</td><td>${esc(t.newCustodian||'-')}</td><td>${esc(t.createdDate)}</td><td>${transferBadge(t.status)}</td><td>${esc(t.note||'-')}</td><td>${transferActions(t,i)}</td></tr>`).join('')||'<tr><td colspan="12" class="empty">ยังไม่มีรายการโอนทรัพย์สิน</td></tr>';}catch(e){err(e);}}
-function transferBadge(s){const c=s==='รับเรียบร้อย'?'ok':s==='ยกเลิก'?'bad':(s==='ระหว่างโอน'||s==='รอรับ')?'warn':'';return `<span class="badge ${c}">${esc(s||'-')}</span>`;}
-function transferActions(t,i){const u=STATE.boot.user,admin=isAdmin(),src=admin||u.branch===t.fromBranch,dst=admin||u.branch===t.toBranch,btn=[];if(t.status==='รอส่ง'&&src)btn.push(`<button class="btn primary" onclick="transferAction(${i},'SEND')">ส่งออก</button>`);if(t.status==='ระหว่างโอน'&&dst)btn.push(`<button class="btn" onclick="transferAction(${i},'ARRIVE')">ถึงสาขา</button>`);if(t.status==='รอรับ'&&dst)btn.push(`<button class="btn success" onclick="transferAction(${i},'RECEIVE')">รับเข้าทะเบียน</button>`);if(['รอส่ง','ระหว่างโอน','รอรับ'].includes(t.status)&&src)btn.push(`<button class="btn danger" onclick="transferAction(${i},'CANCEL')">ยกเลิก</button>`);return btn.join(' ')||'-';}
-async function openTransferForm(){try{const d=await callGas('searchAssets',[{branch:isAdmin()?'ALL':STATE.boot.user.branch,limit:500}]);const rows=(d&&d.rows)||[];$('modalTitle').textContent='สร้างรายการโอนทรัพย์สิน';$('modalBody').innerHTML=`<div class="notice">เลือกทรัพย์สินของสาขาต้นทาง ระบุชื่อผู้โอน และสาขาปลายทาง ระบบจะย้ายทะเบียนจริงเมื่อปลายทางกด <b>รับเข้าทะเบียน</b></div><div class="formgrid"><div class="field span2"><label>รหัสทรัพย์สิน *</label><input id="trAssetId" class="input" list="trAssetList" placeholder="กรอกรหัสทรัพย์สิน"><datalist id="trAssetList">${rows.map(a=>`<option value="${esc(a.assetId)}">${esc(a.assetName)} | ${esc(branchLabel(a.branch))}</option>`).join('')}</datalist></div><div class="field"><label>ชื่อผู้โอนทรัพย์สิน *</label><input id="trTransferor" class="input" placeholder="ชื่อ-นามสกุลผู้ส่งมอบทรัพย์สิน"></div><div class="field"><label>สาขาปลายทาง *</label><select id="trToBranch" class="select">${(STATE.boot.transferBranches||STATE.boot.branches||[]).filter(b=>b!==STATE.boot.user.branch).map(b=>`<option value="${esc(b)}">${esc(branchLabel(b))}</option>`).join('')}</select></div><div class="field span2"><label>หมายเหตุ</label><textarea id="trNote" placeholder="เช่น โอนเครื่องพิมพ์ไปใช้งานประจำสาขาปลายทาง"></textarea></div><div class="span2"><button class="btn success" onclick="createTransferForm()">สร้างรายการโอน</button></div></div>`;openModal();}catch(e){err(e);}}
-async function createTransferForm(){try{const d=await callGas('createAssetTransfer',[{assetId:$('trAssetId').value.trim(),toBranch:$('trToBranch').value,transferorName:$('trTransferor').value.trim(),note:$('trNote').value}]);toast('สร้างรายการโอน '+d.transferId+' เรียบร้อย');closeModal();loadTransfers();}catch(e){err(e);}}
-function openReceiveTransferForm(i){const t=STATE.transferRows[i];if(!t)return;$('modalTitle').textContent='รับโอนทรัพย์สิน '+t.assetId;$('modalBody').innerHTML=`<div class="notice">เมื่อตกลงรับ ระบบจะย้ายทรัพย์สินไปสาขา <b>${esc(branchLabel(t.toBranch))}</b> และเปลี่ยนผู้ดูแลทรัพย์สินตามข้อมูลด้านล่าง</div><div class="formgrid"><div class="field"><label>ผู้โอน</label><input class="input" value="${esc(t.transferorName||'-')}" readonly></div><div class="field"><label>ชื่อผู้รับโอน *</label><input id="rcReceiver" class="input" placeholder="ชื่อ-นามสกุลผู้รับโอน"></div><div class="field span2"><label>ผู้ดูแลทรัพย์สินใหม่ *</label><input id="rcCustodian" class="input" placeholder="ชื่อ-นามสกุลผู้ดูแลทรัพย์สินคนใหม่"></div><div class="field span2"><label>หมายเหตุเพิ่มเติม</label><textarea id="rcNote"></textarea></div><div class="span2"><button class="btn success" onclick="confirmReceiveTransfer(${i})">ยืนยันรับเข้าทะเบียน</button></div></div>`;openModal();}
-async function confirmReceiveTransfer(i){const t=STATE.transferRows[i];if(!t)return;try{const d=await callGas('receiveAssetTransfer',[t.transferId,{receiverName:$('rcReceiver').value.trim(),newCustodian:$('rcCustodian').value.trim(),note:$('rcNote').value}]);toast('รับโอนเรียบร้อย ผู้ดูแลใหม่: '+d.newCustodian);closeModal();await loadTransfers();await loadDashboard();}catch(e){err(e);}}
-async function transferAction(i,action){const t=STATE.transferRows[i];if(!t)return;if(action==='RECEIVE')return openReceiveTransferForm(i);const labels={SEND:'ยืนยันส่งทรัพย์สินออกจาก '+t.fromBranch+' ?',ARRIVE:'ยืนยันว่าทรัพย์สินถึงสาขา '+t.toBranch+' แล้ว ?',CANCEL:'ยืนยันยกเลิกรายการโอนนี้ ?'};if(!confirm(labels[action]||'ยืนยันดำเนินการ?'))return;const note=prompt('หมายเหตุเพิ่มเติม (ไม่บังคับ)','')||'';try{const fn={SEND:'sendAssetTransfer',ARRIVE:'markTransferArrived',CANCEL:'cancelAssetTransfer'}[action];const d=await callGas(fn,[t.transferId,note]);toast('อัปเดตรายการโอนเป็น “'+d.status+'” แล้ว');await loadTransfers();}catch(e){err(e);}}
-
-async function lookupAuditAsset(showReport=false){
-  if(!isAdmin())return toast('เฉพาะ ADMIN');
-  try{
-    const id=$('auditAssetId').value.trim();if(!id)return toast('กรุณากรอกรหัสทรัพย์สิน');
-    const d=await callGas('getAssetDetail',[id]);
-    const selectedBranch=$('auditSearchBranch').value;
-    if(selectedBranch&&selectedBranch!=='ALL'&&d.asset.branch!==selectedBranch)throw new Error('รหัสทรัพย์สินนี้อยู่ที่ '+branchLabel(d.asset.branch)+' ไม่ตรงกับสาขาที่เลือก');
-    STATE.auditAsset=d.asset;$('auditFoundBranch').value=d.asset.branch||'ALL';
-    $('auditAssetInfo').innerHTML=`<div class="notice"><b>${esc(d.asset.assetId)} | ${esc(d.asset.assetName)}</b><br>สาขาตามทะเบียน: ${esc(branchLabel(d.asset.branch))}<br>ผู้ดูแล: ${esc(d.asset.custodian||'-')}<br>สถานะล่าสุด: ${d.latestAudit?statusBadge(d.latestAudit.status):statusBadge('ยังไม่ตรวจ')}</div>`;
-    if(showReport)await showScannedAssetPdf(id);
-    return d.asset;
-  }catch(e){err(e);return null;}
-}
-async function handleAuditScanInput(){const id=$('auditAssetId').value.trim();if(!id)return toast('กรุณาสแกนหรือกรอกรหัสทรัพย์สิน');await lookupAuditAsset(true);}
-function focusHardwareScanner(){$('auditAssetId').focus();$('auditAssetId').select();toast('พร้อมรับข้อมูลจากเครื่องสแกน QR แล้ว');}
-async function submitAudit(){
-  if(!isAdmin())return;
-  try{
-    if(!STATE.auditAsset||STATE.auditAsset.assetId!==$('auditAssetId').value.trim())await lookupAuditAsset(false);
-    if(!STATE.auditAsset)return;
-    const imageData=await imageFileToJpegData($('auditPhotoFile').files[0]);
-    await callGas('saveAudit',[{assetId:$('auditAssetId').value.trim(),auditDate:$('auditDate').value,status:$('auditStatus').value,foundBranch:$('auditFoundBranch').value==='ALL'?STATE.auditAsset.branch:$('auditFoundBranch').value,location:$('auditLocation').value,auditor:$('auditAuditor').value,imageData:imageData,note:$('auditNote').value}]);
-    toast(imageData?'บันทึกผลตรวจและอัปเดตรูปทรัพย์สินล่าสุดแล้ว':'บันทึกผลตรวจเรียบร้อย');
-    if($('auditPhotoFile'))$('auditPhotoFile').value='';
-    await lookupAuditAsset(false);
-  }catch(e){err(e);}
-}
-function isIOSorIPad(){
-  const ua=navigator.userAgent||'';
-  return /iPad|iPhone|iPod/i.test(ua) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
-}
-function openNativeQrCamera(){
-  const input=$('qrPhotoInput');
-  if(!input)return toast('ไม่พบช่องเปิดกล้อง QR');
-  input.value='';
-  input.click();
-}
-function startScanner(){
-  // iOS/iPadOS: หลีกเลี่ยง live getUserMedia ใน Apps Script/iframe เพราะอาจได้ภาพดำ
-  // ใช้ native camera capture ซึ่งเสถียรกว่า แล้ว decode ภาพด้วย BarcodeDetector/html5-qrcode/jsQR
-  if(isIOSorIPad()){
-    toast('iPad/iPhone: กำลังเปิดกล้องของเครื่องเพื่อถ่าย QR');
-    openNativeQrCamera();
-    return;
-  }
-
-  // Android/Desktop: ใช้หน้าต่าง top-level สำหรับ live scanner
-  const w=window.open('','assetQrScanner','width=520,height=760');
-  if(!w){
-    toast('เบราว์เซอร์บล็อก Pop-up กรุณาอนุญาต Pop-up แล้วกดเปิดกล้องอีกครั้ง');
-    return;
-  }
-  const html=`<!doctype html><html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>สแกน QR ทรัพย์สิน</title>
-  <style>body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#eef8fb;color:#183b4a}.wrap{max-width:520px;margin:auto;padding:18px}.card{background:white;border-radius:18px;padding:16px;box-shadow:0 12px 30px rgba(26,78,100,.16)}h2{font-size:22px;margin:0 0 8px}.hint{font-size:14px;color:#607985;margin-bottom:12px}#reader{width:100%;overflow:hidden;border-radius:14px;background:#111}.status{margin-top:12px;padding:10px;border-radius:10px;background:#f3f8fa;font-size:14px;white-space:pre-wrap}.ok{background:#eaf8ef;color:#24643a}.err{background:#fff0f0;color:#a53a3a}.btn{display:inline-block;margin-top:12px;padding:11px 16px;border:0;border-radius:10px;background:#dfecef;color:#244756;font-size:15px}video{width:100%!important;height:auto!important;min-height:280px;background:#111}#reader video{object-fit:cover}</style>
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js'"><\/script></head><body><div class="wrap"><div class="card"><h2>สแกน QR ทรัพย์สิน</h2><div class="hint">อนุญาตการใช้กล้องเมื่อโทรศัพท์ถาม และหันกล้องไปที่ QR ของทรัพย์สิน</div><div id="reader"></div><div id="status" class="status">กำลังเปิดกล้อง...</div><button class="btn" onclick="window.close()">ยกเลิก</button></div></div>
-  <script>
-  let scanner=null,done=false;
-  const statusEl=()=>document.getElementById('status');
-  function setStatus(t,c){const e=statusEl();e.textContent=t;e.className='status '+(c||'');}
-  async function sendResult(value){if(done)return;done=true;setStatus('สแกนสำเร็จ: '+value,'ok');try{window.opener.postMessage({type:'ASSET_QR_SCANNED',value:String(value||'').trim()},'*');}catch(e){}try{if(scanner)await scanner.stop();}catch(e){}setTimeout(()=>window.close(),500);}
-  async function boot(){
-    try{
-      let tries=0; while(typeof Html5Qrcode==='undefined' && tries<50){await new Promise(r=>setTimeout(r,100));tries++;}
-      if(typeof Html5Qrcode==='undefined')throw new Error('โหลดตัวอ่าน QR ไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ต');
-      scanner=new Html5Qrcode('reader');
-      let cameras=[];try{cameras=await Html5Qrcode.getCameras();}catch(e){}
-      let cameraConfig={facingMode:'environment'};
-      if(cameras&&cameras.length){const back=cameras.find(c=>/back|rear|environment|หลัง/i.test(c.label||''));cameraConfig=(back||cameras[cameras.length-1]).id;}
-      await scanner.start(cameraConfig,{fps:10,qrbox:{width:250,height:250},aspectRatio:1.0,disableFlip:false},decoded=>sendResult(decoded),()=>{});
-      // iOS/WebKit ต้องการ playsinline เพื่อไม่ให้ video ค้าง/ดำ; ใส่ซ้ำเพื่อความปลอดภัยบน browser อื่นด้วย
-      const v=document.querySelector('#reader video');if(v){v.setAttribute('playsinline','true');v.setAttribute('webkit-playsinline','true');v.muted=true;v.autoplay=true;try{await v.play();}catch(_e){}}
-      setStatus('กล้องพร้อมใช้งาน กำลังรอสแกน QR...');
-    }catch(e){setStatus('เปิดกล้องไม่สำเร็จ\\n'+(e&&e.message?e.message:e)+'\\n\\nหากใช้งาน iPad/iPhone ให้กลับไปใช้ปุ่ม “ถ่ายภาพ QR”','err');}
-  }
-  window.addEventListener('load',boot);
-  <\/script></body></html>`;
-  w.document.open();w.document.write(html);w.document.close();
-}
-
-window.addEventListener('message',async function(ev){
-  const d=ev&&ev.data;
-  if(!d||d.type!=='ASSET_QR_SCANNED')return;
-  const value=String(d.value||'').trim();
-  if(!value)return;
-  $('auditAssetId').value=value;
-  try{await lookupAuditAsset(true);}catch(e){err(e);}
-});
-
-function loadExternalScriptOnce(url,id){
-  return new Promise((resolve,reject)=>{
-    if(id&&document.getElementById(id))return resolve();
-    const s=document.createElement('script');if(id)s.id=id;s.src=url;s.async=true;
-    s.onload=()=>resolve();s.onerror=()=>reject(new Error('โหลดไลบรารี QR ไม่สำเร็จ'));
-    document.head.appendChild(s);
-  });
-}
-async function ensureQrDecodeLibraries(){
-  const jobs=[];
-  if(typeof Html5Qrcode==='undefined')jobs.push(loadExternalScriptOnce('https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js','lib-html5qr').catch(()=>loadExternalScriptOnce('https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js','lib-html5qr-fallback')));
-  if(typeof jsQR!=='function')jobs.push(loadExternalScriptOnce('https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js','lib-jsqr'));
-  if(jobs.length)await Promise.allSettled(jobs);
-}
-
-async function scanQrFromPhoto(file){
-  if(!file)return;
-  try{
-    toast('กำลังอ่าน QR จากภาพ...');
-    const decoded=await decodeQrImageFile(file);
-    if(!decoded)throw new Error('ไม่พบ QR ในภาพ กรุณาถ่ายให้ QR อยู่กลางภาพและมีขนาดใหญ่ขึ้น');
-    $('auditAssetId').value=String(decoded).trim();
-    await lookupAuditAsset(true);
-  }catch(e){err(new Error('อ่าน QR จากภาพไม่สำเร็จ: '+(e.message||e)));}
-}
-
-async function decodeQrImageFile(file){
-  // 1) Native BarcodeDetector (ถ้า browser รองรับ) — เร็วและแม่นบนอุปกรณ์รุ่นใหม่
-  try{
-    if('BarcodeDetector' in window && window.createImageBitmap){
-      let supported=[];try{supported=await BarcodeDetector.getSupportedFormats();}catch(_e){}
-      if(!supported.length || supported.includes('qr_code')){
-        const detector=new BarcodeDetector({formats:['qr_code']});
-        const bmp=await createImageBitmap(file,{imageOrientation:'from-image'}).catch(()=>createImageBitmap(file));
-        const codes=await detector.detect(bmp);
-        if(bmp&&bmp.close)bmp.close();
-        if(codes&&codes.length&&codes[0].rawValue)return codes[0].rawValue;
-      }
+    let tries=0; while(typeof Html5Qrcode==='undefined'&&tries<60){await new Promise(r=>setTimeout(r,100));tries++;}
+    if(typeof Html5Qrcode==='undefined')throw new Error('โหลดตัวอ่าน QR ไม่สำเร็จ');
+    if(scanner){try{await scanner.stop();}catch(_e){} try{await scanner.clear();}catch(_e){}}
+    scanner=new Html5Qrcode('reader');
+    let cameras=[];try{cameras=await Html5Qrcode.getCameras();}catch(_e){}
+    let cameraConfig={facingMode:{ideal:'environment'}};
+    if(cameras.length){
+      const back=cameras.find(c=>/back|rear|environment|หลัง/i.test(c.label||''));
+      cameraConfig=(back||cameras[cameras.length-1]).id;
     }
-  }catch(_e){}
-
-  // 2) โหลดตัวอ่าน QR เฉพาะตอนใช้งาน เพื่อลดเวลาเปิดระบบ
-  await ensureQrDecodeLibraries();
-  try{
-    if(window.Html5Qrcode){
-      let holder=document.getElementById('qrFileReaderTemp');
-      if(!holder){holder=document.createElement('div');holder.id='qrFileReaderTemp';holder.style.cssText='position:fixed;left:-9999px;top:-9999px;width:320px;height:320px;';document.body.appendChild(holder);}
-      const q=new Html5Qrcode('qrFileReaderTemp');
-      const decoded=await q.scanFile(file,true);
-      try{q.clear();}catch(_e){}
-      if(decoded)return decoded;
-    }
-  }catch(_e){}
-
-  // 3) jsQR fallback: อ่านภาพผ่าน canvas พร้อมย่อให้เหมาะกับ QR decoder
-  if(typeof jsQR==='function'){
-    const img=await loadImageForQr(file);
-    const attempts=[2200,1600,1200,800];
-    for(const maxSide of attempts){
-      const canvas=document.createElement('canvas');
-      const scale=Math.min(1,maxSide/Math.max(img.naturalWidth||img.width,img.naturalHeight||img.height));
-      canvas.width=Math.max(1,Math.round((img.naturalWidth||img.width)*scale));
-      canvas.height=Math.max(1,Math.round((img.naturalHeight||img.height)*scale));
-      const ctx=canvas.getContext('2d',{willReadFrequently:true});
-      ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
-      ctx.drawImage(img,0,0,canvas.width,canvas.height);
-      const data=ctx.getImageData(0,0,canvas.width,canvas.height);
-      const code=jsQR(data.data,data.width,data.height,{inversionAttempts:'attemptBoth'});
-      if(code&&code.data)return code.data;
-    }
-  }
-  return '';
-}
-function loadImageForQr(file){
-  return new Promise((resolve,reject)=>{
-    const url=URL.createObjectURL(file),img=new Image();
-    img.onload=()=>{URL.revokeObjectURL(url);resolve(img);};
-    img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('เปิดไฟล์ภาพไม่ได้'));};
-    img.src=url;
-  });
-}
-
-function stopScanner(){ /* v4.0: scanner ทำงานในหน้าต่างแยก จึงไม่มี stream ใน GAS iframe ให้ปิด */ }
-async function showScannedAssetPdf(assetId){
-  try{
-    const d=await callGas('getAssetPdfPreview',[assetId]);
-    const binary=atob(d.base64),bytes=new Uint8Array(binary.length);for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
-    if(STATE.pdfPreviewUrl){try{URL.revokeObjectURL(STATE.pdfPreviewUrl);}catch(_e){}}
-    STATE.pdfPreviewUrl=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'}));
-    $('modalTitle').textContent='รายงานทรัพย์สิน '+assetId;
-    $('modalBody').innerHTML=`<div class="notice">สแกน QR สำเร็จ — แสดงรายงาน PDF ที่บันทึกไว้ในระบบ</div><iframe src="${STATE.pdfPreviewUrl}" style="width:100%;height:68vh;border:1px solid var(--line);border-radius:10px"></iframe><div class="actions" style="margin-top:10px"><button class="btn primary" onclick="printAssetPdf('${esc(assetId)}')">🖨 พิมพ์รายงาน</button><button class="btn success" onclick="closeModal()">ดำเนินการตรวจนับ</button></div>`;
-    openModal();
-  }catch(e){err(e);}
-}
-
-async function loadHistory(){try{const rows=await callGas('getAssetHistory',[$('historyAssetId').value.trim()]);$('historyBody').innerHTML=rows.slice(0,500).map(h=>`<tr><td>${esc(h.date)}</td><td>${esc(h.assetId)}</td><td>${esc(h.type)}</td><td>${esc(h.branch)}</td><td>${esc(h.user||h.email)}</td><td title="${esc(h.newValue)}">${esc(String(h.newValue||'').slice(0,70))}</td><td>${esc(h.note)}</td></tr>`).join('')||'<tr><td colspan="7" class="empty">ไม่พบประวัติ</td></tr>';}catch(e){err(e);}}
-async function loadReports(){try{const d=await callGas('getReports',[{branch:$('reportBranch').value,assetType:$('reportType').value}]);renderKpis($('reportKpis'),d.dashboard.kpis);$('reportBody').innerHTML=d.progress.map(x=>`<tr><td>${esc(branchLabel(x.branch))}</td><td>${x.total}</td><td>${x.audited}</td><td>${x.normal}</td><td>${x.issue}</td><td>${x.notAudited}</td><td><div style="display:flex;align-items:center;gap:7px"><div class="progress"><i style="width:${x.percent}%"></i></div>${pct(x.percent)}</div></td></tr>`).join('')||'<tr><td colspan="7" class="empty">ไม่มีข้อมูล</td></tr>';STATE.reportAssets=d.assets||[];$('reportAssetBody').innerHTML=STATE.reportAssets.map((x,i)=>`<tr><td><b>${esc(x.assetId)}</b></td><td>${esc(x.assetName)}</td><td>${esc(branchLabel(x.branch))}</td><td>${assetStatusBadge(x.assetStatus)}</td><td>${esc(x.statusNote)}</td><td>${esc(x.statusUpdated)}</td><td>${x.pdf?`<button class="btn icon primary" title="พิมพ์รายงาน PDF" onclick="printAssetPdf('${esc(x.assetId)}')">🖨</button>`:'<span class="badge">ยังไม่มี PDF</span>'}</td><td>${STATE.boot.user.permissions.edit?`<button class="btn icon" title="แก้ไขสถานะ" onclick="openStatusForm(${i})">🛠</button>`:''}</td></tr>`).join('')||'<tr><td colspan="8" class="empty">ไม่มีข้อมูล</td></tr>';}catch(e){err(e);}}
-function openStatusForm(i){const a=STATE.reportAssets[i];if(!a)return;$('modalTitle').textContent='อัปเดตสถานะ '+a.assetId;$('modalBody').innerHTML=`<div class="formgrid"><div class="field span2"><label>สถานะทรัพย์สิน</label><select id="stStatus" class="select">${(STATE.boot.assetStatuses||[]).map(s=>`<option ${s===a.assetStatus?'selected':''}>${esc(s)}</option>`).join('')}</select></div><div class="field span2"><label>หมายเหตุ</label><textarea id="stNote" placeholder="ระบุรายละเอียด เช่น ขายซาก เลขที่เอกสาร หรือสาขาที่เกี่ยวข้อง">${esc(a.statusNote||'')}</textarea></div><div class="span2"><button class="btn success" onclick="saveStatus('${esc(a.assetId)}')">อัปเดตสถานะ</button></div></div>`;openModal();}async function saveStatus(assetId){try{await callGas('updateAssetStatus',[{assetId,status:$('stStatus').value,note:$('stNote').value}]);toast('อัปเดตสถานะเรียบร้อย');closeModal();loadReports();}catch(e){err(e);}}
-
-async function loadUsers(){if(!STATE.boot.user.permissions.admin)return;try{STATE.users=await callGas('getUsers');$('userBody').innerHTML=STATE.users.map((x,i)=>`<tr><td><b>${esc(x.username)}</b></td><td>${esc(x.email||'-')}</td><td>${esc(x.role)}</td><td>${esc(x.branch==='ALL'?'ทุกสาขา':branchLabel(x.branch))}</td><td>${yesNo(x.view)}</td><td>${yesNo(x.edit)}</td><td>${yesNo(x.audit)}</td><td>${yesNo(x.report)}</td><td>${yesNo(x.admin)}</td><td>${yesNo(x.active)}</td><td><button class="btn icon" title="แก้ไขผู้ใช้งาน" onclick="openUserForm(${i})">🛠</button></td></tr>`).join('')||'<tr><td colspan="11" class="empty">ยังไม่มีผู้ใช้งาน</td></tr>';}catch(e){err(e);}}function yesNo(v){return String(v).toUpperCase()==='TRUE'?'<span class="badge ok">ใช่</span>':'<span class="badge">ไม่</span>';}
-function openUserForm(i){const u=Number.isInteger(i)?STATE.users[i]:null,role=u?u.role:'USER',isAd=role==='ADMIN';$('modalTitle').textContent=u?'แก้ไขผู้ใช้งาน '+u.username:'เพิ่มผู้ใช้งาน';$('modalBody').innerHTML=`<div class="formgrid"><div class="field"><label>ชื่อผู้ใช้ *</label><input id="uUsername" class="input" value="${esc(u?u.username:'')}" ${u?'readonly':''} placeholder="ART_01"></div><div class="field"><label>อีเมล (ไม่บังคับ)</label><input id="uEmail" class="input" value="${esc(u?u.email:'')}"></div><div class="field"><label>รหัสผ่าน</label><input id="uPassword" type="password" class="input" autocomplete="new-password"><div class="filehint" id="uPasswordHint">กรอกรหัสผ่านใหม่อย่างน้อย 8 ตัวอักษร</div><button type="button" class="btn" style="margin-top:6px" onclick="fillDefaultUserPassword()">ใช้รหัสสาขา@2026</button></div><div class="field"><label>บทบาท</label><select id="uRole" class="select" onchange="syncUserRole()"><option ${role==='USER'?'selected':''}>USER</option><option ${role==='ADMIN'?'selected':''}>ADMIN</option></select></div><div class="field"><label>สาขา</label><select id="uBranch" class="select"><option value="ALL">ALL</option>${allAdminBranches().map(v=>`<option value="${esc(v)}" ${u&&v===u.branch?'selected':''}>${esc(branchLabel(v))}</option>`).join('')}</select></div>${[['view','ดูข้อมูล',u?u.view:'TRUE'],['edit','แก้ไขทะเบียน',u?u.edit:'TRUE'],['audit','ตรวจนับ (ADMIN เท่านั้น)',u?u.audit:'FALSE'],['report','ดูรายงาน',u?u.report:'TRUE'],['admin','จัดการระบบ',u?u.admin:'FALSE'],['active','ใช้งาน',u?u.active:'TRUE']].map(x=>`<label><input type="checkbox" id="u_${x[0]}" ${String(x[2]).toUpperCase()==='TRUE'?'checked':''}> ${x[1]}</label>`).join('')}<div class="span2"><button class="btn success" onclick="saveUserForm()">บันทึกผู้ใช้งาน</button></div></div>`;syncUserRole();openModal();}
-function allAdminBranches(){return STATE.boot&&isAdmin()?STATE.boot.branches:[];}function syncUserRole(){const ad=$('uRole')&&$('uRole').value==='ADMIN';if(!$('uBranch'))return;$('uBranch').disabled=ad;if(ad){$('uBranch').value='ALL';$('u_audit').checked=true;$('u_admin').checked=true;}else{$('u_audit').checked=false;$('u_admin').checked=false;if($('uBranch').value==='ALL'&&STATE.boot.branches.length)$('uBranch').value=STATE.boot.branches[0];}}
-function fillDefaultUserPassword(){
-  const role=($('uRole')&&$('uRole').value)||'USER';
-  const branch=(($('uBranch')&&$('uBranch').value)||'').trim().toUpperCase();
-  if(role==='ADMIN')return toast('บัญชี ADMIN กรุณากำหนดรหัสผ่านเอง');
-  if(!branch||branch==='ALL')return toast('กรุณาเลือกสาขาก่อน');
-  $('uPassword').value=branch+'@2026';
-  if($('uPasswordHint'))$('uPasswordHint').textContent='ตั้งรหัสเป็น '+branch+'@2026 แล้ว';
-}
-
-async function saveUserForm(){try{let password=$('uPassword').value;const username=$('uUsername').value.trim(),role=$('uRole').value,branch=$('uBranch').value;const exists=STATE.users.some(x=>String(x.username||'').toUpperCase()===username.toUpperCase());if(!exists&&!password&&role!=='ADMIN'&&branch&&branch!=='ALL')password=branch.toUpperCase()+'@2026';await callGas('saveUser',[{username:username,email:$('uEmail').value,password:password,role:role,branch:branch,view:$('u_view').checked,edit:$('u_edit').checked,audit:$('u_audit').checked,report:$('u_report').checked,admin:$('u_admin').checked,active:$('u_active').checked}]);toast(exists?(password?'อัปเดตผู้ใช้และเปลี่ยนรหัสผ่านเรียบร้อย':'อัปเดตผู้ใช้งานเรียบร้อย'):'เพิ่มผู้ใช้งานเรียบร้อย');closeModal();loadUsers();}catch(e){err(e);}}
-
-async function loadBranches(){
-  if(!isAdmin())return;
-  try{
-    STATE.branches=await callGas('getBranches');
-    $('branchBody').innerHTML=STATE.branches.map((b,i)=>`<tr><td><b>${esc(b.code)}</b></td><td>${esc(b.name)}</td><td>${b.active?'<span class="badge ok">ใช้งาน</span>':'<span class="badge bad">ปิดใช้งาน</span>'}</td><td style="text-align:right">${Number(b.assetCount||0).toLocaleString('th-TH')}</td><td style="text-align:right">${Number(b.userCount||0).toLocaleString('th-TH')}</td><td>${esc(b.defaultUsername)}</td><td>${esc(b.note||'-')}</td><td><button class="btn icon" title="แก้ไขสาขา" onclick="openBranchForm(${i})">🛠</button></td></tr>`).join('')||'<tr><td colspan="8" class="empty">ยังไม่มีข้อมูลสาขา</td></tr>';
-  }catch(e){err(e);}
-}
-
-function openBranchForm(i){
-  if(!isAdmin())return toast('เฉพาะ ADMIN');
-  const b=Number.isInteger(i)?STATE.branches[i]:null;
-  $('modalTitle').textContent=b?'แก้ไขสาขา '+b.code:'เพิ่มสาขาใหม่';
-  $('modalBody').innerHTML=`<div class="formgrid">
-    <div class="field"><label>รหัสสาขา *</label><input id="bCode" class="input" value="${esc(b?b.code:'')}" ${b?'readonly':''} placeholder="เช่น RYG" oninput="syncBranchAccountPreview()"></div>
-    <div class="field"><label>ชื่อสาขาภาษาไทย *</label><input id="bName" class="input" value="${esc(b?b.name:'')}" placeholder="เช่น สาขาระยอง"></div>
-    <label><input type="checkbox" id="bActive" ${!b||b.active?'checked':''}> เปิดใช้งานสาขา</label>
-    ${b?`<div class="detailitem"><b>ข้อมูลปัจจุบัน</b>ทรัพย์สิน ${Number(b.assetCount||0).toLocaleString('th-TH')} รายการ | ผู้ใช้ ${Number(b.userCount||0).toLocaleString('th-TH')} บัญชี</div>`:`<label><input type="checkbox" id="bCreateUser" checked onchange="syncBranchAccountPreview()"> สร้างบัญชี USER หลักให้อัตโนมัติ</label><div class="field"><label>รหัสผ่านเริ่มต้น</label><input id="bPassword" type="text" class="input" placeholder="เว้นว่าง = รหัสสาขา@2026" oninput="syncBranchAccountPreview()"></div>`}
-    <div class="field span2"><label>หมายเหตุ</label><textarea id="bNote" placeholder="ข้อมูลเพิ่มเติมเกี่ยวกับสาขา">${esc(b?b.note:'')}</textarea></div>
-    ${!b?'<div class="span2 notice" id="branchAccountPreview"></div>':''}
-    <div class="span2"><button class="btn success" onclick="saveBranchForm(${b?i:'null'})">บันทึกสาขา</button></div>
-  </div>`;
-  if(!b)syncBranchAccountPreview();
-  openModal();
-}
-
-function syncBranchAccountPreview(){
-  const box=$('branchAccountPreview'); if(!box)return;
-  const code=String(($('bCode')&&$('bCode').value)||'').trim().toUpperCase();
-  const create=$('bCreateUser')&&$('bCreateUser').checked;
-  if(!create){box.textContent='จะเพิ่มเฉพาะสาขา โดยยังไม่สร้างบัญชีผู้ใช้งาน';return;}
-  const shown=code||'CODE';
-  box.innerHTML=`บัญชีที่จะสร้าง: <b>${esc(shown+'_01')}</b> | รหัสผ่านเริ่มต้น: <b>${esc((($('bPassword')&&$('bPassword').value)||'').trim()||shown+'@2026')}</b>`;
-}
-
-async function saveBranchForm(i){
-  try{
-    const existing=Number.isInteger(i)?STATE.branches[i]:null;
-    const payload={
-      code:$('bCode').value.trim().toUpperCase(),
-      originalCode:existing?existing.code:'',
-      name:$('bName').value.trim(),
-      active:$('bActive').checked,
-      note:$('bNote').value.trim(),
-      createDefaultUser:!existing&&$('bCreateUser')&&$('bCreateUser').checked,
-      initialPassword:!existing&&$('bPassword')?$('bPassword').value:''
-    };
-    const d=await callGas('saveBranch',[payload]);
-    closeModal();
-    // โหลด bootstrap ใหม่เพื่อให้ Dropdown ทุกหน้ามองเห็นสาขาใหม่ทันทีโดยไม่ต้องออกจากระบบ
-    STATE.boot=await callGas('getAppBootstrap');
-    fillFilters();
-    if(isAdmin())$('dashBranch').style.display='block';
-    let msg=(d.isNew?'เพิ่ม':'อัปเดต')+'สาขา '+d.label+' เรียบร้อย';
-    if(d.createdUser)msg+=' | สร้าง '+d.username+' แล้ว';
-    toast(msg);
-    await loadBranches();
-  }catch(e){err(e);}
-}
-
-
-async function showQrPopup(assetId){
-  try{
-    const d=await callGas('getAssetQrImage',[assetId]);
-    if(!d||!d.base64)throw new Error('ไม่สามารถสร้าง QR ได้');
-    const dataUrl='data:'+(d.mimeType||'image/png')+';base64,'+d.base64;
-    const filename=d.filename||('QR_'+assetId+'.png');
-    $('modalTitle').textContent='QR ทรัพย์สิน '+assetId;
-    STATE.currentQr={dataUrl:dataUrl,assetId:assetId,filename:filename};$('modalBody').innerHTML=`<div class="qr-preview"><img src="${dataUrl}" alt="QR ${esc(assetId)}"><div style="font-weight:700">${esc(assetId)}</div><div class="actions"><button class="btn success" onclick="printCurrentQr()">🖨 พิมพ์ QR</button><a class="btn primary" href="${dataUrl}" download="${esc(filename)}">💾 บันทึกรูป QR</a><button class="btn" onclick="closeModal()">ปิด</button></div></div>`;
-    openModal();
-  }catch(e){err(e);}
-}
-
-function printCurrentQr(){
-  const q=STATE.currentQr;
-  if(!q||!q.dataUrl)return toast('ไม่พบข้อมูล QR สำหรับพิมพ์');
-  const w=window.open('','_blank','width=680,height=760');
-  if(!w)return toast('เบราว์เซอร์บล็อกหน้าต่างพิมพ์ กรุณาอนุญาต Pop-up');
-  w.document.write(`<!doctype html><html lang="th"><head><meta charset="utf-8"><title>QR ${esc(q.assetId)}</title><style>@page{size:A4;margin:14mm}body{font-family:"Angsana News","Angsana New",Tahoma,sans-serif;text-align:center;margin:0;padding:24px;color:#233f50}.box{border:1px solid #d9e7ee;border-radius:16px;padding:28px;display:inline-block}.box img{width:320px;max-width:70vw;height:auto}.id{font-size:24px;font-weight:700;margin-top:12px}.sub{font-size:18px;margin-top:4px}@media print{button{display:none}}</style></head><body><div class="box"><img src="${q.dataUrl}"><div class="id">${esc(q.assetId)}</div><div class="sub">QR ทรัพย์สิน</div></div><script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script></body></html>`);
-  w.document.close();
-}
-
-async function printAssetPdf(assetId){
-  const printWin=window.open('','_blank','width=980,height=760');
-  if(!printWin)return toast('เบราว์เซอร์บล็อกหน้าต่างพิมพ์ กรุณาอนุญาต Pop-up แล้วลองใหม่');
-  printWin.document.write('<html><head><title>กำลังเตรียมรายงาน...</title></head><body style="font-family:Tahoma,sans-serif;padding:30px;text-align:center">กำลังเตรียม PDF สำหรับพิมพ์...</body></html>');
-  try{
-    const d=await callGas('getAssetPdfForPrint',[assetId]);
-    const binary=atob(d.base64), bytes=new Uint8Array(binary.length);
-    for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
-    const blob=new Blob([bytes],{type:d.mimeType||'application/pdf'}), url=URL.createObjectURL(blob);
-    printWin.location.href=url;
-    setTimeout(()=>{
-      try{printWin.focus();printWin.print();}catch(_e){toast('PDF เปิดแล้ว กรุณากดไอคอนเครื่องพิมพ์');}
-      setTimeout(()=>URL.revokeObjectURL(url),60000);
-    },1500);
-    toast('เปิดหน้าต่างพิมพ์ PDF แล้ว');
+    await scanner.start(cameraConfig,{
+      fps:12,
+      qrbox:(w,h)=>{const s=Math.max(180,Math.min(Math.floor(Math.min(w,h)*0.72),320));return {width:s,height:s};},
+      aspectRatio:1.0,
+      disableFlip:false
+    },decoded=>finish(decoded),()=>{});
+    const v=document.querySelector('#reader video');
+    if(v){v.setAttribute('playsinline','true');v.setAttribute('webkit-playsinline','true');v.muted=true;v.autoplay=true;try{await v.play();}catch(_e){}}
+    setStatus('กล้องพร้อมใช้งาน — หันกล้องไปที่ QR ทรัพย์สิน','ok');
   }catch(e){
-    try{printWin.close();}catch(_e){}
-    err(e);
+    $('startBtn').disabled=false;
+    setStatus('เปิดกล้องไม่สำเร็จ: '+(e&&e.message?e.message:e)+'\nกรุณาตรวจสิทธิ์กล้อง หรือใช้ “ถ่าย/เลือกรูป QR”','err');
   }
 }
-
-function exportAssetsCsv(){const rows=STATE.lastAssetRows||[];if(!rows.length)return toast('ไม่มีข้อมูลสำหรับ Export');const heads=['รหัสทรัพย์สิน','ชื่อทรัพย์สิน','ประเภท','สาขา','แหล่งที่มา','วันที่บันทึก','วันที่จัดซื้อ','ราคา (ต่อชิ้น)','จำนวน','รวมราคา','ผู้ดูแล','สถานะทรัพย์สิน','หมายเหตุสถานะ','PDF'];const keys=['assetId','assetName','assetType','branch','source','recordDate','purchaseDate','price','quantity','totalPrice','custodian','assetStatus','statusNote','pdf'];const csv='\ufeff'+[heads,...rows.map(r=>keys.map(k=>String(r[k]??'').replace(/"/g,'""')))].map(row=>row.map(v=>'"'+v+'"').join(',')).join('\r\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='ทะเบียนทรัพย์สิน_'+today()+'.csv';a.click();URL.revokeObjectURL(a.href);}
-function openModal(){$('modal').classList.add('show');}function closeModal(){$('modal').classList.remove('show');}
+function openPhoto(){const i=$('photoInput');i.value='';i.click();}
+async function scanPhoto(file){
+  if(!file)return;
+  setStatus('กำลังอ่าน QR จากภาพ...');
+  try{
+    let tries=0; while(typeof Html5Qrcode==='undefined'&&tries<60){await new Promise(r=>setTimeout(r,100));tries++;}
+    if(typeof Html5Qrcode==='undefined')throw new Error('โหลดตัวอ่าน QR ไม่สำเร็จ');
+    const temp=document.createElement('div');temp.id='fileQrReader';temp.style.cssText='position:fixed;left:-9999px;top:-9999px;width:320px;height:320px';document.body.appendChild(temp);
+    const q=new Html5Qrcode('fileQrReader');
+    const decoded=await q.scanFile(file,true);
+    try{await q.clear();}catch(_e){}
+    temp.remove();
+    await finish(decoded);
+  }catch(e){setStatus('อ่าน QR จากภาพไม่สำเร็จ กรุณาถ่ายให้ QR ชัดและอยู่กลางภาพ\n'+(e&&e.message?e.message:e),'err');}
+}
+function submitManual(){const code=$('manualCode').value.trim();if(!code)return setStatus('กรุณากรอกรหัสทรัพย์สิน','err');finish(code);}
+$('manualCode').addEventListener('keydown',e=>{if(e.key==='Enter')submitManual();});
 </script>
 </body>
 </html>
